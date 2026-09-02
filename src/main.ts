@@ -13,8 +13,7 @@ async function bootstrap() {
   app.use(helmet());
   app.use(cookieParser());
   app.enableCors({
-    origin: 'http://localhost:5173',
-    credentials: true,
+    origin: '*',
   });
   app.setGlobalPrefix('/api/v1');
 

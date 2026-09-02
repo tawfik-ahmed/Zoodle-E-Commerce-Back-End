@@ -83,7 +83,7 @@ import { OAuthModule } from './oauth/oauth.module';
         ],
         namingStrategy: new SnakeNamingStrategy(),
         // dropSchema: true,
-        synchronize: true,
+        // synchronize: true,
       }),
     }),
     ConfigModule.forRoot({
