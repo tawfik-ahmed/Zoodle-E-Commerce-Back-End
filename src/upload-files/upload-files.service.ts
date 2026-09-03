@@ -84,6 +84,40 @@ export class UploadFilesService {
     return this.uploadFile(file, 'Product-Covers', productName);
   }
 
+  /**
+   * Uploads a category image to Cloudinary
+   * @param {Multer.File} file
+   * @param {string} categoryName
+   * @returns {Promise<CloudinaryResponse>}
+   */
+  public async uploadCategoryImage(
+    file: Express.Multer.File,
+    categoryName: string,
+  ) {
+    await this.deleteFile('Category-Images', categoryName);
+    return this.uploadFile(file, 'Category-Images', categoryName);
+  }
+
+  /**
+   * Uploads a subcategory image to Cloudinary
+   * @param {Multer.File} file
+   * @param {string} subCategoryName
+   * @returns {Promise<CloudinaryResponse>}
+   */
+  public async uploadSubCategoryImage(
+    file: Express.Multer.File,
+    subCategoryName: string,
+  ) {
+    await this.deleteFile('SubCategory-Images', subCategoryName);
+    return this.uploadFile(file, 'SubCategory-Images', subCategoryName);
+  }
+
+  /**
+   * Uploads a request product cover to Cloudinary
+   * @param {Multer.File} file
+   * @param {string} productName
+   * @returns {Promise<CloudinaryResponse>}
+   */
   public async uploadRequestProductCoverImage(
     file: Express.Multer.File,
     productName: string,
