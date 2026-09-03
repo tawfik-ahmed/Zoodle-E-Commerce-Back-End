@@ -35,10 +35,6 @@ export class CreateProductDto {
   @IsOptional()
   images?: Array<string>;
 
-  @IsNumber({}, { message: 'sold must be a number' })
-  @IsOptional()
-  sold?: number;
-
   @IsNumber({}, { message: 'price must be a number' })
   @Min(1, { message: 'price must be at least 1' })
   price: number;

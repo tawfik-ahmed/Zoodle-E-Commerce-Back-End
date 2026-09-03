@@ -15,6 +15,7 @@ import { Brand } from '../../brand/entites/brand.entity';
 import { SubCategory } from '../../sub-category/entities/sub-category.entity';
 import { Category } from '../../category/entities/category.entity';
 import { ProductColor } from '../../product/entities/product-color.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class RequestProduct {
@@ -47,19 +48,24 @@ export class RequestProduct {
   @Column({ default: 0 })
   discount: number;
 
+  @Exclude()
   @ManyToMany(() => ProductColor)
   @JoinTable()
   colors: ProductColor[];
 
+  @Exclude()
   @ManyToOne(() => Category, (category) => category.requestProducts)
   category: Category;
 
+  @Exclude()
   @ManyToOne(() => SubCategory, (subCategory) => subCategory.requestProducts)
   subCategory: SubCategory;
 
+  @Exclude()
   @ManyToOne(() => Brand, (brand) => brand.requestProducts)
   brand: Brand;
 
+  @Exclude()
   @ManyToOne(() => Supplier, (supplier) => supplier.requestProducts)
   supplier: Supplier;
 

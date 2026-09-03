@@ -170,7 +170,7 @@ export class OrderService {
 
           mode: 'payment',
 
-          client_reference_id: String(userId),
+          client_reference_id: String(order.id),
           customer_email: user.email,
 
           success_url,
@@ -296,12 +296,14 @@ export class OrderService {
     switch (event.type) {
       case 'checkout.session.completed':
         const sessionId = event.data.object.id;
+        console.log('SESSION ID FROM STRIPE:', sessionId);
 
         const order = await this.orderRepository.findOne({
           where: { sessionId: sessionId },
           relations: ['user', 'cartItems', 'cartItems.product'],
         });
 
+        console.log(order);
         if (!order) {
           throw new NotFoundException({
             ok: false,

@@ -1,4 +1,4 @@
-import { CURRENT_TIMESTAMP } from '../../utils/constants'; 
+import { CURRENT_TIMESTAMP } from '../../utils/constants';
 import {
   Column,
   CreateDateColumn,
@@ -9,8 +9,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Category } from '../../category/entities/category.entity';
-import { Product } from '../../product/entities/product.entity'; 
+import { Product } from '../../product/entities/product.entity';
 import { RequestProduct } from '../../request-product/entities/request-product.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class SubCategory {
@@ -23,12 +24,18 @@ export class SubCategory {
   @Column({ nullable: true })
   image: string;
 
+  @Exclude()
   @ManyToOne(() => Category, (category) => category.subCategories)
   category: Category;
-
-  @OneToMany(() => RequestProduct, (requestProduct) => requestProduct.subCategory)
-  requestProducts: RequestProduct[];
   
+  @Exclude()
+  @OneToMany(
+    () => RequestProduct,
+    (requestProduct) => requestProduct.subCategory,
+  )
+  requestProducts: RequestProduct[];
+
+  @Exclude()
   @OneToMany(() => Product, (product) => product.subCategory)
   products: Product[];
 

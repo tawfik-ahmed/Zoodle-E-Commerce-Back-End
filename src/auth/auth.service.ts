@@ -15,6 +15,8 @@ import { SignUpDto } from './dtos/sign-up.dto';
 import { SignInDto } from './dtos/sign-in.dto';
 import { ResetPasswordDto } from './dtos/reset-password.dto';
 import { MailerService } from '@nestjs-modules/mailer';
+import { randomBytes } from 'crypto';
+import { FRONTEND_URL } from '../utils/constants';
 
 @Injectable()
 export class AuthService {
@@ -33,12 +35,10 @@ export class AuthService {
    * @throws {BadRequestException} If a user with the same email already exists.
    *
    * @param {AuthDto} dto - User data.
-   * @returns {Promise<{ ok: boolean, access_token: string, refresh_token: string, message: string, data: User }>} - Object with ok property, jwt token and user data.
+   * @returns {Promise<{ ok: boolean, message: string, data: User }>} - Object with ok property, jwt token and user data.
    */
   public async signUp(dto: SignUpDto): Promise<{
     ok: boolean;
-    access_token: string;
-    refresh_token: string;
     message: string;
     data: User;
   }> {
@@ -47,25 +47,28 @@ export class AuthService {
     if (isUserExists) {
       throw new BadRequestException({
         ok: false,
-        message: 'User already exists',
+        message: 'User already exists, please sign in',
       });
     }
 
     const hashedPassword = await this.generateHashedPassword(dto.password);
+    const emailVerificationToken = this.generateEmailVerificationToken();
+
     const user = this.userRepository.create({
       ...dto,
       password: hashedPassword,
+      isActive: false,
+      emailVerificationToken,
+      emailVerificationTokenExpiresAt: new Date(Date.now() + 15 * 60 * 1000),
     });
+
     await this.userRepository.save(user);
 
-    const accessToken = await this.generateJwtAccessToken(user);
-    const refreshToken = await this.generateJwtRefreshToken(user);
+    await this.sendEmailVerficationLink(user.email, emailVerificationToken);
 
     return {
       ok: true,
-      access_token: accessToken,
-      refresh_token: refreshToken,
-      message: 'User created successfully',
+      message: 'User created successfully, please verify your email',
       data: user,
     };
   }
@@ -98,6 +101,24 @@ export class AuthService {
       throw new BadRequestException({
         ok: false,
         message: 'Incorrect password',
+      });
+    }
+
+    if (!user.isActive) {
+      const emailVerificationToken = this.generateEmailVerificationToken();
+
+      user.emailVerificationToken = emailVerificationToken;
+      user.emailVerificationTokenExpiresAt = new Date(
+        Date.now() + 15 * 60 * 1000,
+      );
+
+      await this.userRepository.save(user);
+      await this.sendEmailVerficationLink(user.email, emailVerificationToken);
+
+      throw new BadRequestException({
+        ok: false,
+        message:
+          'Please verify your email. A new verification link has been sent.',
       });
     }
 
@@ -246,6 +267,61 @@ export class AuthService {
   }
 
   /**
+   * Verify the email for the given user.
+   *
+   * @param {string} email - Email of the user to verify.
+   * @param {string} token - Email verification token.
+   * @returns {Promise<{ ok: boolean; message: string }>} - Object with ok property and success message.
+   */
+  public async verifyEmail(email: string, token: string) {
+    const user = await this.userService.getUserByEmail(email);
+
+    if (!user) {
+      throw new BadRequestException({
+        ok: false,
+        message: 'Invalid verification link',
+      });
+    }
+
+    if (user.isActive) {
+      return {
+        ok: true,
+        message: 'Email is already verified',
+      };
+    }
+
+    if (user.emailVerificationToken !== token) {
+      console.log(token);
+      console.log(user.emailVerificationToken);
+      throw new BadRequestException({
+        ok: false,
+        message: 'Invalid verification link',
+      });
+    }
+
+    if (
+      !user.emailVerificationTokenExpiresAt ||
+      user.emailVerificationTokenExpiresAt < new Date()
+    ) {
+      throw new BadRequestException({
+        ok: false,
+        message: 'Verification link has expired, please try to login again',
+      });
+    }
+
+    user.isActive = true;
+    user.emailVerificationToken = null!;
+    user.emailVerificationTokenExpiresAt = null!;
+
+    await this.userRepository.save(user);
+
+    return {
+      ok: true,
+      message: 'Email verified successfully, you can now login',
+    };
+  }
+
+  /**
    * Generates a verification code as a string of 6 digits, between 100000 and 999999.
    * This code is used to verify the user's email address during the sign up process.
    */
@@ -289,6 +365,55 @@ export class AuthService {
       expiresIn: this.config.get<string>(
         'JWT_REFRESH_TOKEN_EXPIRES_IN',
       )! as any,
+    });
+  }
+
+  /**
+   * Generates a random email verification token.
+   */
+  public generateEmailVerificationToken(): string {
+    return randomBytes(32).toString('hex');
+  }
+
+  /**
+   * Sends an email verification link to the user's email address.
+   *
+   * @param {string} email - Email address of the user.
+   * @param {string} token - Email verification token.
+   * @returns {Promise<void>}
+   * @throws {Error} If the email verification link could not be sent.
+   * */
+  private async sendEmailVerficationLink(email: string, token: string) {
+    const verificationUrl = `${FRONTEND_URL}/verify-email?token=${token}&email=${encodeURIComponent(email)}`;
+
+    await this.mailerService.sendMail({
+      from: `Zoodle E-Commerce <${this.config.get<string>('GMAIL_USER')}>`,
+      to: email,
+      subject: 'Zoodle E-Commerce - Verify Your Email',
+      html: `<div>
+      <h1>Welcome to Zoodle E-Commerce!</h1>
+
+      <p>Please verify your email address by clicking the link below:</p>
+
+      <a
+        href="${verificationUrl}"
+        style="
+          display: inline-block;
+          padding: 12px 20px;
+          background: #000;
+          color: #fff;
+          text-decoration: none;
+          border-radius: 6px;
+        "
+      >
+        Verify Your Email
+      </a>
+
+      <p>This verification link will expire in 15 minutes.</p>
+
+      <p>Thank you for using our service!</p>
+      <p>Best regards,<br/>Zoodle E-Commerce</p>
+    </div>`,
     });
   }
 }

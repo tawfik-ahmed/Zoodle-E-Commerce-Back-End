@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Product } from '../../product/entities/product.entity';
 import { RequestProduct } from '../../request-product/entities/request-product.entity';
 import { CURRENT_TIMESTAMP } from '../../utils/constants';
@@ -21,9 +22,11 @@ export class Brand {
   @Column({ nullable: true })
   image: string;
 
+  @Exclude()
   @OneToMany(() => Product, (product) => product.brand)
   products: Product[];
 
+  @Exclude()
   @OneToMany(() => RequestProduct, (requestProduct) => requestProduct.brand)
   requestProducts: RequestProduct[];
 

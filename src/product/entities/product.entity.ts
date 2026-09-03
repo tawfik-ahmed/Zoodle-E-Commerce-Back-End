@@ -17,6 +17,7 @@ import { ProductColor } from './product-color.entity';
 import { ProductImage } from './product-image.entity';
 import { Review } from '../../review/entities/review.entity';
 import { CartItem } from '../../cart/entities/cart-item.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Product {
@@ -83,9 +84,11 @@ export class Product {
   @ManyToOne(() => Brand, (brand) => brand.products)
   brand: Brand;
 
+  @Exclude()
   @OneToMany(() => Review, (review) => review.product)
   reviews: Review[];
 
+  @Exclude()
   @OneToMany(() => CartItem, (cartItem) => cartItem.product)
   cartItems: CartItem[];
 

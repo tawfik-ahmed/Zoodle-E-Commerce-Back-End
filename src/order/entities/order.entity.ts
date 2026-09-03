@@ -8,6 +8,7 @@ import {
 import { User } from '../../user/entites/user.entity';
 import { CartItem } from '../../cart/entities/cart-item.entity';
 import { PaymentMethod } from '../../utils/enums';
+import { Exclude } from 'class-transformer';
 
 class ShippingAddress {
   @Column({ nullable: true })
@@ -43,6 +44,7 @@ export class Order {
   @Column({ nullable: true })
   sessionId: string;
 
+  @Exclude()
   @ManyToOne(() => User, (user) => user.orders)
   user: User;
 

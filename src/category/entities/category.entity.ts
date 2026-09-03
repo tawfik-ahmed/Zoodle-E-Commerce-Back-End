@@ -1,5 +1,5 @@
-import { SubCategory } from '../../sub-category/entities/sub-category.entity'; 
-import { CURRENT_TIMESTAMP } from '../../utils/constants'; 
+import { SubCategory } from '../../sub-category/entities/sub-category.entity';
+import { CURRENT_TIMESTAMP } from '../../utils/constants';
 import {
   Column,
   CreateDateColumn,
@@ -8,8 +8,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Product } from '../../product/entities/product.entity'; 
+import { Product } from '../../product/entities/product.entity';
 import { RequestProduct } from '../../request-product/entities/request-product.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Category {
@@ -22,12 +23,15 @@ export class Category {
   @Column({ nullable: true })
   image: string;
 
+  @Exclude()
   @OneToMany(() => SubCategory, (subCategory) => subCategory.category)
   subCategories: SubCategory[];
 
+  @Exclude()
   @OneToMany(() => Product, (product) => product.category)
   products: Product[];
 
+  @Exclude()
   @OneToMany(() => RequestProduct, (requestProduct) => requestProduct.category)
   requestProducts: RequestProduct[];
 

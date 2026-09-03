@@ -2,8 +2,10 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Get,
   Param,
   Post,
+  Query,
   Req,
   Res,
   UseInterceptors,
@@ -30,27 +32,7 @@ export class AuthController {
     @Body() signUpDto: SignUpDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { access_token, refresh_token, ...rest } =
-      await this.authService.signUp(signUpDto);
-
-    const isProduction =
-      this.configService.get<string>('NODE_ENV') === 'production';
-
-    res.cookie('access_token', access_token, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? 'none' : 'lax',
-      maxAge: 15 * 60 * 1000,
-    });
-    res.cookie('refresh_token', refresh_token, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? 'none' : 'lax',
-
-      path: '/api/v1/auth/refresh-token',
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-    });
-    return rest;
+    return this.authService.signUp(signUpDto);
   }
 
   @Post('sign-in')
@@ -97,6 +79,14 @@ export class AuthController {
       return this.authService.verifyVerificationCode(email, verificationCode);
     }
   }
+
+  @Get('verify-email')
+public verifyEmail(
+  @Query('email') email: string,
+  @Query('token') token: string,
+) {
+  return this.authService.verifyEmail(email, token);
+}
 
   @Post('change-password')
   public changePassword(@Body() changePasswordDto: SignInDto) {

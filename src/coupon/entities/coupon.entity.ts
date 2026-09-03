@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Coupon {
@@ -23,6 +24,8 @@ export class Coupon {
   @Column()
   discount: number;
 
+    @Exclude()
+  
   @ManyToMany(() => Cart, (cart) => cart.coupons)
   carts: Cart[];
 

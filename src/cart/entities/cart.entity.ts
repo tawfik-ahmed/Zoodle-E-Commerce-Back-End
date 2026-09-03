@@ -14,6 +14,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { CartItem } from './cart-item.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Cart {
@@ -44,6 +45,7 @@ export class Cart {
   })
   totalPriceAfterDiscount: number;
 
+  @Exclude()
   @OneToOne(() => User, (user) => user.cart)
   @JoinColumn()
   user: User;

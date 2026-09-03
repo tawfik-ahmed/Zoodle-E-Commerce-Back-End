@@ -87,13 +87,21 @@ export class OrderController {
 // ~ api/v1/webhooks
 @Controller('webhooks')
 export class WebhookController {
-  constructor(private readonly orderService: OrderService, private readonly configService: ConfigService) {}
+  constructor(
+    private readonly orderService: OrderService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Post('stripe')
   public async stripeWebhook(
     @Headers('stripe-signature') signature: string,
     @Req() request: RawBodyRequest<Request>,
   ) {
-    return this.orderService.stripeWebhook(request.rawBody, signature, this.configService.get<string>('ENDPOINT_SECRET')!);
+    console.log('hi');
+    return this.orderService.stripeWebhook(
+      request.rawBody,
+      signature,
+      this.configService.get<string>('ENDPOINT_SECRET')!,
+    );
   }
 }

@@ -19,7 +19,6 @@ import { JwtPayloadType } from '../utils/types';
 import { AuthService } from '../auth/auth.service';
 import { Supplier } from '../supplier/entities/supplier.entity';
 import { UserRole } from '../utils/enums';
-import { normalizeText } from '../utils/normalize';
 
 @Injectable()
 export class UserService {
@@ -56,7 +55,7 @@ export class UserService {
     const user = {
       ...dto,
       password: hashedPassword,
-      active: true,
+      isActive: true,
     };
 
     const newUser: User = this.userRepository.create(user);
@@ -283,7 +282,7 @@ export class UserService {
 
         const updatedUser = this.userRepository.merge(user, dto);
         await this.userRepository.save(updatedUser);
-        
+
         return {
           ok: true,
           message:

@@ -53,21 +53,33 @@ export class User {
 
   @Column({ nullable: true })
   @Exclude()
+  emailVerificationToken: string;
+
+  @Column({ type: 'timestamp', nullable: true })
+  @Exclude()
+  emailVerificationTokenExpiresAt: Date;
+
+  @Column({ nullable: true })
+  @Exclude()
   verificationCode: string;
 
   @Column({ default: false })
   @Exclude()
   isCodeVerified: boolean;
 
+  @Exclude()
   @OneToOne(() => Supplier, (supplier) => supplier.user)
   supplier: Supplier;
 
+  @Exclude()
   @OneToMany(() => Review, (review) => review.user)
   reviews: Review[];
 
+  @Exclude()
   @OneToOne(() => Cart, (cart) => cart.user)
   cart: Cart;
 
+  @Exclude()
   @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
 
