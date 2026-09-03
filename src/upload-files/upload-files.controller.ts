@@ -88,9 +88,11 @@ export class UploadFilesController {
     file: Express.Multer.File,
     @Body('subCategoryName') subCategoryName: string,
   ) {
-    return this.uploadFilesService.uploadSubCategoryImage(file, subCategoryName);
+    return this.uploadFilesService.uploadSubCategoryImage(
+      file,
+      subCategoryName,
+    );
   }
-
 
   @Post('product-images')
   @UseInterceptors(FilesInterceptor('file[]', 5))

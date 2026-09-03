@@ -1,11 +1,10 @@
 {
   "info": {
-    "_postman_id": "a1e2820c-92e3-44b4-b759-f05f7c2890cc",
-    "name": "Zoodle E-Commerce (Back-End)",
-    "description": "# Zoodle E-Commerce (Back-End) API\n\nA comprehensive, production-ready **REST API** powering a full-featured e-commerce backend. This API covers the entire commerce lifecycle — from user authentication and product catalog management, to shopping carts, order processing, and file uploads. Built with a modular, resource-oriented architecture, it is designed to serve both end-users and administrators through clearly separated concerns.\n\n---\n\n## Base URL\n\nAll API endpoints are prefixed with `/api/v1` and resolved against the `{{base_url}}` environment variable.\n\n```\n{{base_url}}/api/v1\n\n ```\n\n> Set the `base_url` variable in your active Postman environment before sending requests. \n  \n\n---\n\n## Authentication\n\nMost endpoints require a valid **Bearer JWT token** passed in the `Authorization` header.\n\n```\nAuthorization: Bearer <your_token>\n\n ```\n\nObtain a token by calling the **Auth → Sign In** endpoint with valid credentials. The returned token should be stored (e.g., in the `token` environment variable) and reused across subsequent requests.\n\n---\n\n## API Modules\n\n| Folder | Description |\n| --- | --- |\n| **Auth** | User registration, login, password reset, and token management |\n| **Users** | Authenticated user self-service profile management |\n| **Users As Admins** | Admin-level user management with filtering and pagination |\n| **Categories** | Top-level product category CRUD |\n| **Sub Categories** | Nested sub-categories linked to parent categories |\n| **Brands** | Product brand management |\n| **Coupons** | Discount coupon creation and management |\n| **Suppliers** | Supplier/vendor management |\n| **Request Products** | Internal procurement and restocking requests |\n| **Taxes** | Global tax and shipping price configuration |\n| **Products** | Core product catalog management |\n| **Reviews** | Customer product reviews and ratings |\n| **Carts** | Shopping cart management and coupon application |\n| **Orders** | Order checkout (cash & card) and order history |\n| **Upload-Images** | File upload for profile images and product media |\n\n---\n\n## Quick Start\n\nFollow this typical flow to interact with the API end-to-end:\n\n**1\\. Register or Sign In**\n\n```\nPOST {{base_url}}/api/v1/auth/signup\nPOST {{base_url}}/api/v1/auth/signin\n\n ```\n\nA successful sign-in returns a JWT token. Store it as your `token` variable.\n\n**2\\. Authenticate Requests**\n\nInclude the token in the `Authorization` header for all protected endpoints:\n\n```\nAuthorization: Bearer {{token}}\n\n ```\n\n**3\\. Browse the Product Catalog**\n\n```\nGET {{base_url}}/api/v1/products\nGET {{base_url}}/api/v1/categories\nGET {{base_url}}/api/v1/sub-categories\n\n ```\n\n**4\\. Add Items to Cart**\n\n```\nPOST {{base_url}}/api/v1/carts\n\n ```\n\nOptionally apply a discount coupon:\n\n```\nPUT {{base_url}}/api/v1/carts/apply-coupon\n\n ```\n\n**5\\. Place an Order**\n\n```\nPOST {{base_url}}/api/v1/orders          // Cash on delivery\nPOST {{base_url}}/api/v1/orders/checkout // Card payment\n\n ```\n\n---\n\n> For any issues with authentication or permissions, ensure your token is valid and not expired. Re-authenticate via the Sign In endpoint to obtain a fresh token.",
+    "_postman_id": "56648d35-fc34-4e72-a66d-cbda7803d4f6",
+    "name": "Zoodle E-Commerce",
+    "description": "# Zoodle E-Commerce API\n\nA comprehensive, production-ready **REST API** powering a full-featured e-commerce backend. This API covers the entire commerce lifecycle — from user authentication and product catalog management, to shopping carts, order processing, and file uploads. Built with a modular, resource-oriented architecture, it is designed to serve both end-users and administrators through clearly separated concerns.\n\n---\n\n## Base URL\n\nAll API endpoints are prefixed with `/api/v1` and resolved against the `{{base_url}}` environment variable.\n\n```\n{{base_url}}/api/v1\n\n ```\n\n> Set the `base_url` variable in your active Postman environment before sending requests. \n  \n\n---\n\n## Authentication\n\nMost endpoints require a valid **Bearer JWT token** passed in the `Authorization` header.\n\n```\nAuthorization: Bearer <your_token>\n\n ```\n\nObtain a token by calling the **Auth → Sign In** endpoint with valid credentials. The returned token should be stored (e.g., in the `token` environment variable) and reused across subsequent requests.\n\n---\n\n## API Modules\n\n| Folder | Description |\n| --- | --- |\n| **Auth** | User registration, login, password reset, and token management |\n| **Users** | Authenticated user self-service profile management |\n| **Users As Admins** | Admin-level user management with filtering and pagination |\n| **Categories** | Top-level product category CRUD |\n| **Sub Categories** | Nested sub-categories linked to parent categories |\n| **Brands** | Product brand management |\n| **Coupons** | Discount coupon creation and management |\n| **Suppliers** | Supplier/vendor management |\n| **Request Products** | Internal procurement and restocking requests |\n| **Taxes** | Global tax and shipping price configuration |\n| **Products** | Core product catalog management |\n| **Reviews** | Customer product reviews and ratings |\n| **Carts** | Shopping cart management and coupon application |\n| **Orders** | Order checkout (cash & card) and order history |\n| **Upload-Images** | File upload for profile images and product media |\n\n---\n\n## Quick Start\n\nFollow this typical flow to interact with the API end-to-end:\n\n**1\\. Register or Sign In**\n\n```\nPOST {{base_url}}/api/v1/auth/signup\nPOST {{base_url}}/api/v1/auth/signin\n\n ```\n\nA successful sign-in returns a JWT token. Store it as your `token` variable.\n\n**2\\. Authenticate Requests**\n\nInclude the token in the `Authorization` header for all protected endpoints:\n\n```\nAuthorization: Bearer {{token}}\n\n ```\n\n**3\\. Browse the Product Catalog**\n\n```\nGET {{base_url}}/api/v1/products\nGET {{base_url}}/api/v1/categories\nGET {{base_url}}/api/v1/sub-categories\n\n ```\n\n**4\\. Add Items to Cart**\n\n```\nPOST {{base_url}}/api/v1/carts\n\n ```\n\nOptionally apply a discount coupon:\n\n```\nPUT {{base_url}}/api/v1/carts/apply-coupon\n\n ```\n\n**5\\. Place an Order**\n\n```\nPOST {{base_url}}/api/v1/orders          // Cash on delivery\nPOST {{base_url}}/api/v1/orders/checkout // Card payment\n\n ```\n\n---\n\n> For any issues with authentication or permissions, ensure your token is valid and not expired. Re-authenticate via the Sign In endpoint to obtain a fresh token.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "47398342",
-    "_collection_link": "https://go.postman.co/collection/47398342-a1e2820c-92e3-44b4-b759-f05f7c2890cc?source=collection_link"
+    "_exporter_id": "47398342"
   },
   "item": [
     {
@@ -40,8 +39,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/users?role=admin&limit=5&skip=0&sort=age",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "users"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users"
+              ],
               "query": [
                 {
                   "key": "role",
@@ -93,8 +98,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/users/7",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "users", "7"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "7"
+              ]
             }
           },
           "response": []
@@ -116,7 +128,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email\": \"taw@gmail.com\",\r\n    \"password\": \"#tawfikahmed01226921531#\"\r\n}",
+              "raw": "{\n    \"name\": \"Tawfik Ahmed\",\n    \"email\": \"taw@gmail.com\",\n    \"password\": \"#tawfikahmed01226921531#\",\n    \"role\": \"user\",\n    \"age\": 25,\n    \"avatar\": \"https://example.com/avatars/tawfik.png\",\n    \"phoneNumber\": \"+201012345678\",\n    \"address\": \"123 Nile Street, Cairo, Egypt\",\n    \"gender\": \"male\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -125,9 +137,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/users",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "users"]
-            }
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users"
+              ]
+            },
+            "description": "## Create New User\n\nCreates a new user account in the system.\n\n---\n\n### Request Body Fields\n\n#### Required Fields\n\n| Field | Type | Validation |\n|-------|------|------------|\n| `name` | `string` | 3–35 characters, normalized |\n| `email` | `string` | Valid email address, max 50 characters, normalized |\n| `password` | `string` | 6–40 characters |\n\n#### Optional Fields\n\n| Field | Type | Validation |\n|-------|------|------------|\n| `role` | `UserRole` enum | Accepted values: `\"admin\"`, `\"user\"` |\n| `age` | `number` | Min: `10`, Max: `100` |\n| `avatar` | `string` | Must be a valid URL |\n| `phoneNumber` | `string` | Egyptian phone number format (EG) |\n| `address` | `string` | Max 100 characters, normalized |\n| `gender` | `UserGender` enum | Accepted values: `\"male\"`, `\"female\"` |\n\n---\n\n### Example Request Body\n\n```json\n{\n    \"name\": \"Tawfik Ahmed\",\n    \"email\": \"taw@gmail.com\",\n    \"password\": \"#tawfikahmed01226921531#\",\n    \"role\": \"user\",\n    \"age\": 25,\n    \"avatar\": \"https://example.com/avatars/tawfik.png\",\n    \"phoneNumber\": \"+201012345678\",\n    \"address\": \"123 Nile Street, Cairo, Egypt\",\n    \"gender\": \"male\"\n}\n```\n\n---\n\n### Responses\n\n| Status | Description |\n|--------|-------------|\n| `201 Created` | User created successfully |\n| `400 Bad Request` | Validation error — check field constraints |\n| `409 Conflict` | Email already in use |"
           },
           "response": []
         },
@@ -148,7 +167,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"password\": \"tawfik01226921531\"\r\n}",
+              "raw": "{\r\n    \"isActive\": true\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -156,9 +175,16 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/users/9",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "users", "9"]
+              "raw": "{{base_url}}/api/v1/users/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "1"
+              ]
             }
           },
           "response": []
@@ -188,9 +214,16 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/users/11",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "users", "11"]
+              "raw": "{{base_url}}/api/v1/users/2",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "2"
+              ]
             }
           },
           "response": []
@@ -230,8 +263,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/users-me",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "users-me"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users-me"
+              ]
             }
           },
           "response": []
@@ -262,8 +301,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/users-me",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "users-me"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users-me"
+              ]
             }
           },
           "response": []
@@ -294,8 +339,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/users-me",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "users-me"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users-me"
+              ]
             }
           },
           "response": []
@@ -316,7 +367,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email\": \"tawfikahgfdmed@gmail.com\",\r\n    \"password\": \"#tawfikahmed01226921531#\",\r\n    \"name\": \"Tifo     dfds  \"\r\n}",
+              "raw": "{\r\n    \"email\": \"tawfikahmed1x@gmail.com\",\r\n    \"password\": \"#tawfikahmed01226921531#\",\r\n    \"name\": \"Tawfik Admin\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -325,8 +376,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/auth/sign-up",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "auth", "sign-up"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "sign-up"
+              ]
             }
           },
           "response": []
@@ -341,7 +399,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email\": \"tavvfikk@gmail.com\",\r\n    \"password\": \"#tawfikahmed01226921531#\"\r\n}",
+              "raw": "{\r\n    \"email\": \"tawfikahmed1x@gmail.com\",\r\n    \"password\": \"#tawfikahmed01226921531#\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -350,8 +408,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/auth/sign-in",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "auth", "sign-in"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "sign-in"
+              ]
             }
           },
           "response": []
@@ -375,8 +440,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/auth/reset-password",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "auth", "reset-password"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "reset-password"
+              ]
             }
           },
           "response": []
@@ -400,8 +472,60 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/auth/verify-code",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "auth", "verify-code"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "verify-code"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Email",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/verify-email?token=5bdef9664273b3293b79eefcf2be4bceccc1a4cdc0342d522657facea266c3e5&email=tawfikahmed1x@gmail.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "verify-email"
+              ],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "5bdef9664273b3293b79eefcf2be4bceccc1a4cdc0342d522657facea266c3e5"
+                },
+                {
+                  "key": "email",
+                  "value": "tawfikahmed1x@gmail.com"
+                }
+              ]
             }
           },
           "response": []
@@ -425,8 +549,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/auth/change-password",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "auth", "change-password"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "change-password"
+              ]
             }
           },
           "response": []
@@ -445,8 +576,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/auth/refresh-token",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "auth", "refresh-token"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "refresh-token"
+              ]
             }
           },
           "response": []
@@ -470,12 +608,23 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email\": \"tawfik@gmail.com\",\r\n    \"password\": \"tawfikahmed01226921531\"\r\n}"
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
             },
             "url": {
               "raw": "{{base_url}}/api/v1/categories",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "categories"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "categories"
+              ]
             }
           },
           "response": []
@@ -497,8 +646,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/categories/2",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "categories", "2"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "categories",
+                "2"
+              ]
             }
           },
           "response": []
@@ -520,7 +676,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"name\": \"Phones\"\r\n}",
+              "raw": "{\r\n    \"name\": \"Mobile Phone\",\r\n    \"image\": \"http://res.cloudinary.com/dbrekuffj/image/upload/v1788454173/Profile-Images/1.jpg\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -529,8 +685,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/categories",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "categories"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "categories"
+              ]
             }
           },
           "response": []
@@ -561,8 +723,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/categories/2",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "categories", "2"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "categories",
+                "2"
+              ]
             }
           },
           "response": []
@@ -593,8 +762,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/categories/2",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "categories", "2"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "categories",
+                "2"
+              ]
             }
           },
           "response": []
@@ -622,8 +798,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/sub-categories",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "sub-categories"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "sub-categories"
+              ]
             }
           },
           "response": []
@@ -638,8 +820,15 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/sub-categories/1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "sub-categories", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "sub-categories",
+                "1"
+              ]
             }
           },
           "response": []
@@ -661,7 +850,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "\r\n\r\n  { \"name\": \"Samsung\", \"image\": \"https://example.com/images/hoodies.jpg\", \"categoryId\": 1 }\r\n",
+              "raw": "{\r\n   \"name\": \"IPhone 16 Pro Max\",                          \r\n   \"categoryId\": 1,                                 \r\n   \"image\": \"http://res.cloudinary.com/dbrekuffj/image/upload/v1788454367/Profile-Images/1.jpg\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -670,8 +859,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/sub-categories",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "sub-categories"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "sub-categories"
+              ]
             }
           },
           "response": []
@@ -702,8 +897,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/sub-categories/3",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "sub-categories", "3"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "sub-categories",
+                "3"
+              ]
             }
           },
           "response": []
@@ -734,8 +936,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/sub-categories/1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "sub-categories", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "sub-categories",
+                "1"
+              ]
             }
           },
           "response": []
@@ -770,8 +979,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/brands",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "brands"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "brands"
+              ]
             }
           },
           "response": []
@@ -800,8 +1015,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/brands/1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "brands", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "brands",
+                "1"
+              ]
             }
           },
           "response": []
@@ -823,7 +1045,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"name\": \"Samsung\", \r\n  \"image\": \"https://example.com/images/hm.jpg\" \r\n}",
+              "raw": "{\r\n  \"name\": \"Apple\", \r\n  \"image\": \"http://res.cloudinary.com/dbrekuffj/image/upload/v1788454479/Profile-Images/1.jpg\" \r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -832,8 +1054,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/brands",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "brands"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "brands"
+              ]
             }
           },
           "response": []
@@ -864,8 +1092,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/brands/1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "brands", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "brands",
+                "1"
+              ]
             }
           },
           "response": []
@@ -896,8 +1131,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/brands/1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "brands", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "brands",
+                "1"
+              ]
             }
           },
           "response": []
@@ -932,8 +1174,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/coupons",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "coupons"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "coupons"
+              ]
             }
           },
           "response": []
@@ -962,8 +1210,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/coupons/12",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "coupons", "12"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "coupons",
+                "12"
+              ]
             }
           },
           "response": []
@@ -994,8 +1249,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/coupons",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "coupons"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "coupons"
+              ]
             }
           },
           "response": []
@@ -1026,8 +1287,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/coupons/12",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "coupons", "12"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "coupons",
+                "12"
+              ]
             }
           },
           "response": []
@@ -1058,8 +1326,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/coupons/12",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "coupons", "12"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "coupons",
+                "12"
+              ]
             }
           },
           "response": []
@@ -1094,8 +1369,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/suppliers",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "suppliers"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "suppliers"
+              ]
             }
           },
           "response": []
@@ -1124,8 +1405,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/suppliers/1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "suppliers", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "suppliers",
+                "1"
+              ]
             }
           },
           "response": []
@@ -1154,8 +1442,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/suppliers/pending",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "suppliers", "pending"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "suppliers",
+                "pending"
+              ]
             }
           },
           "response": []
@@ -1184,8 +1479,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/suppliers/pending-updates",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "suppliers", "pending-updates"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "suppliers",
+                "pending-updates"
+              ]
             }
           },
           "response": []
@@ -1216,8 +1518,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/suppliers/1/approve",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "suppliers", "1", "approve"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "suppliers",
+                "1",
+                "approve"
+              ]
             }
           },
           "response": []
@@ -1248,8 +1558,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/suppliers/1/reject",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "suppliers", "1", "reject"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "suppliers",
+                "1",
+                "reject"
+              ]
             }
           },
           "response": []
@@ -1283,8 +1601,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/suppliers/1/reject-reason",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "suppliers", "1", "reject-reason"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "suppliers",
+                "1",
+                "reject-reason"
+              ]
             }
           },
           "response": []
@@ -1315,8 +1641,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/suppliers/me",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "suppliers", "me"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "suppliers",
+                "me"
+              ]
             }
           },
           "response": []
@@ -1347,8 +1680,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/suppliers/1/approve-update",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "suppliers", "1", "approve-update"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "suppliers",
+                "1",
+                "approve-update"
+              ]
             }
           },
           "response": []
@@ -1379,8 +1720,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/suppliers/1/reject-update",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "suppliers", "1", "reject-update"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "suppliers",
+                "1",
+                "reject-update"
+              ]
             }
           },
           "response": []
@@ -1414,8 +1763,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/suppliers/1/reject-update-reason",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "suppliers", "1", "reject-update-reason"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "suppliers",
+                "1",
+                "reject-update-reason"
+              ]
             }
           },
           "response": []
@@ -1455,8 +1812,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/request-products",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "request-products"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "request-products"
+              ]
             }
           },
           "response": []
@@ -1485,8 +1848,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/request-products/4",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "request-products", "4"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "request-products",
+                "4"
+              ]
             }
           },
           "response": []
@@ -1517,8 +1887,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/request-products",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "request-products"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "request-products"
+              ]
             }
           },
           "response": []
@@ -1549,8 +1925,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/request-products/8",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "request-products", "8"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "request-products",
+                "8"
+              ]
             }
           },
           "response": []
@@ -1581,8 +1964,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/request-products/4",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "request-products", "4"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "request-products",
+                "4"
+              ]
             }
           },
           "response": []
@@ -1613,8 +2003,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/request-products/accept/3",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "request-products", "accept", "3"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "request-products",
+                "accept",
+                "3"
+              ]
             }
           },
           "response": []
@@ -1645,8 +2043,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/request-products/reject/2",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "request-products", "reject", "2"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "request-products",
+                "reject",
+                "2"
+              ]
             }
           },
           "response": []
@@ -1675,7 +2081,9 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/request-products/approved-request-products",
-              "host": ["{{base_url}}"],
+              "host": [
+                "{{base_url}}"
+              ],
               "path": [
                 "api",
                 "v1",
@@ -1710,7 +2118,9 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/request-products/rejected-request-products",
-              "host": ["{{base_url}}"],
+              "host": [
+                "{{base_url}}"
+              ],
               "path": [
                 "api",
                 "v1",
@@ -1745,7 +2155,9 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/request-products/pending-request-products",
-              "host": ["{{base_url}}"],
+              "host": [
+                "{{base_url}}"
+              ],
               "path": [
                 "api",
                 "v1",
@@ -1791,8 +2203,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/taxes",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "taxes"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "taxes"
+              ]
             }
           },
           "response": []
@@ -1823,8 +2241,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/taxes",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "taxes"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "taxes"
+              ]
             }
           },
           "response": []
@@ -1855,8 +2279,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/taxes",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "taxes"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "taxes"
+              ]
             }
           },
           "response": []
@@ -1896,8 +2326,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/products",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "products"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products"
+              ],
               "query": [
                 {
                   "key": "price[lte]",
@@ -1983,8 +2419,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/products/2",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "products", "2"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                "2"
+              ]
             }
           },
           "response": []
@@ -2006,7 +2449,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"title\": \"Sony Headphones WH-1000XM4\", \r\n  \"description\": \"Noise-cancelling wireless headphones with premium sound quality.\", \r\n  \"quantity\": 35, \r\n  \"price\": 350, \r\n  \"priceAfterDiscount\": 320, \r\n  \"imageCover\": \"https://example.com/images/products/sony_headphones.jpg\", \r\n  \"images\": [\"https://example.com/images/products/sony_headphones_1.jpg\",\"https://example.com/images/products/sony_headphones_2.jpg\"], \r\n  \"colors\": [\"black\", \"silver\"], \r\n  \"sold\": 0, \r\n  \"categoryId\": 1, \r\n  \"subCategoryId\": 3, \r\n  \"brandId\": 5\r\n}",
+              "raw": "{\n  \"title\": \"Iphone 16 pro max\",\n  \"description\": \"Noise-cancelling wireless headphones with premium sound quality.\",\n  \"quantity\": 35,\n  \"price\": 350,\n  \"discount\": 10,\n  \"imageCover\": \"http://res.cloudinary.com/dbrekuffj/image/upload/v1788454479/Profile-Images/1.jpg\",\n  \"images\": [\"http://res.cloudinary.com/dbrekuffj/image/upload/v1788454479/Profile-Images/1.jpg\"],\n  \"colors\": [\"black\", \"silver\"],\n  \"categoryId\": 1,\n  \"subCategoryId\": 1,\n  \"brandId\": 1\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2015,9 +2458,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/products",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "products"]
-            }
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products"
+              ]
+            },
+            "description": "## Create Product\n\nCreates a new product in the system. All required fields must be provided; optional fields can be omitted.\n\n---\n\n### Request Body Fields\n\n| Field | Type | Required | Validation |\n|---|---|---|---|\n| `title` | `string` | ✅ Required | 3–150 characters, normalized (trimmed/lowercased) |\n| `description` | `string` | ✅ Required | Minimum 20 characters |\n| `quantity` | `number` | ✅ Required | Minimum value: `1` |\n| `price` | `number` | ✅ Required | Minimum value: `1` |\n| `imageCover` | `string` | ✅ Required | Must be a valid URL |\n| `categoryId` | `number` | ✅ Required | ID of the parent category |\n| `subCategoryId` | `number` | ✅ Required | ID of the sub-category |\n| `brandId` | `number` | ✅ Required | ID of the brand |\n| `images` | `string[]` | ⬜ Optional | Array of valid URLs for additional product images |\n| `discount` | `number` | ⬜ Optional | Discount percentage or amount; minimum value: `1` |\n| `colors` | `string[]` | ⬜ Optional | Array of available color strings (e.g. `\"black\"`, `\"silver\"`) |\n\n---\n\n### Example Request Body\n\n```json\n{\n  \"title\": \"Iphone 16 pro max\",\n  \"description\": \"Noise-cancelling wireless headphones with premium sound quality.\",\n  \"quantity\": 35,\n  \"price\": 350,\n  \"discount\": 10,\n  \"imageCover\": \"http://res.cloudinary.com/dbrekuffj/image/upload/v1788454479/Profile-Images/1.jpg\",\n  \"images\": [\"http://res.cloudinary.com/dbrekuffj/image/upload/v1788454479/Profile-Images/1.jpg\"],\n  \"colors\": [\"black\", \"silver\"],\n  \"categoryId\": 1,\n  \"subCategoryId\": 1,\n  \"brandId\": 1\n}\n```"
           },
           "response": []
         },
@@ -2047,8 +2497,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/products/2",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "products", "2"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                "2"
+              ]
             }
           },
           "response": []
@@ -2079,8 +2536,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/products/2",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "products", "2"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                "2"
+              ]
             }
           },
           "response": []
@@ -2120,8 +2584,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/reviews/1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "reviews", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reviews",
+                "1"
+              ]
             }
           },
           "response": []
@@ -2150,8 +2621,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/reviews/1/2",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "reviews", "1", "2"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reviews",
+                "1",
+                "2"
+              ]
             }
           },
           "response": []
@@ -2182,8 +2661,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/reviews",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "reviews"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reviews"
+              ]
             }
           },
           "response": []
@@ -2214,8 +2699,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/products/6",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "products", "6"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                "6"
+              ]
             }
           },
           "response": []
@@ -2246,8 +2738,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/products/2",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "products", "2"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                "2"
+              ]
             }
           },
           "response": []
@@ -2284,8 +2783,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/carts/1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "carts", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "carts",
+                "1"
+              ]
             }
           },
           "response": []
@@ -2316,8 +2822,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/carts/items/9",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "carts", "items", "9"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "carts",
+                "items",
+                "9"
+              ]
             }
           },
           "response": []
@@ -2348,8 +2862,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/carts/items/9",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "carts", "items", "9"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "carts",
+                "items",
+                "9"
+              ]
             }
           },
           "response": []
@@ -2371,8 +2893,15 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/carts/me",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "carts", "me"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "carts",
+                "me"
+              ]
             }
           },
           "response": []
@@ -2398,8 +2927,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/carts/coupons/coupon1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "carts", "coupons", "coupon1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "carts",
+                "coupons",
+                "coupon1"
+              ]
             }
           },
           "response": []
@@ -2436,8 +2973,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/carts/checkout/cash",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "carts", "checkout", "cash"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "carts",
+                "checkout",
+                "cash"
+              ]
             }
           },
           "response": []
@@ -2468,8 +3013,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/carts/checkout/64",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "carts", "checkout", "64"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "carts",
+                "checkout",
+                "64"
+              ]
             }
           },
           "response": []
@@ -2500,8 +3053,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/carts/checkout/card",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "carts", "checkout", "card"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "carts",
+                "checkout",
+                "card"
+              ]
             }
           },
           "response": []
@@ -2530,8 +3091,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/orders",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "orders"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "orders"
+              ]
             }
           },
           "response": []
@@ -2560,8 +3127,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/orders/1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "orders", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "orders",
+                "1"
+              ]
             }
           },
           "response": []
@@ -2593,15 +3167,117 @@
                 {
                   "key": "file",
                   "type": "file",
-                  "uuid": "d7429230-ca16-4452-8c8c-51f3bfe76c3e",
-                  "src": "/C:/Users/tawfi/Downloads/ph2.png"
+                  "src": [
+                    "/C:/Users/tawfi/Downloads/iphone-16-pmax.jpg"
+                  ]
                 }
               ]
             },
             "url": {
               "raw": "{{base_url}}/api/v1/upload-files/profile-image",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "upload-files", "profile-image"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "upload-files",
+                "profile-image"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Category Image",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": [
+                    "/C:/Users/tawfi/Downloads/iphone-16-pmax.jpg"
+                  ]
+                },
+                {
+                  "key": "categoryName",
+                  "value": "",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/upload-files/category-image",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "upload-files",
+                "category-image"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Sub-Category Image",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": [
+                    "/C:/Users/tawfi/Downloads/iphone-16-pmax.jpg"
+                  ]
+                },
+                {
+                  "key": "subCategoryName",
+                  "value": "",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/upload-files/sub-category-image",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "upload-files",
+                "sub-category-image"
+              ]
             }
           },
           "response": []
@@ -2640,8 +3316,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/upload-files/product-cover",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "upload-files", "product-cover"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "upload-files",
+                "product-cover"
+              ]
             }
           },
           "response": []
@@ -2680,7 +3363,9 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/upload-files/request-product-cover-image",
-              "host": ["{{base_url}}"],
+              "host": [
+                "{{base_url}}"
+              ],
               "path": [
                 "api",
                 "v1",
@@ -2725,8 +3410,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/upload-files/product-images",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "upload-files", "product-images"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "upload-files",
+                "product-images"
+              ]
             }
           },
           "response": []
@@ -2757,8 +3449,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/upload-files/profile-image",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "upload-files", "profile-image"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "upload-files",
+                "profile-image"
+              ]
             }
           },
           "response": []
@@ -2789,8 +3488,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/upload-files/product-cover",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "upload-files", "product-cover"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "upload-files",
+                "product-cover"
+              ]
             }
           },
           "response": []
@@ -2821,8 +3527,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/upload-files/product-images",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "upload-files", "product-images"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "upload-files",
+                "product-images"
+              ]
             }
           },
           "response": []
@@ -2838,7 +3551,9 @@
         "type": "text/javascript",
         "packages": {},
         "requests": {},
-        "exec": [""]
+        "exec": [
+          ""
+        ]
       }
     },
     {
@@ -2847,7 +3562,9 @@
         "type": "text/javascript",
         "packages": {},
         "requests": {},
-        "exec": [""]
+        "exec": [
+          ""
+        ]
       }
     }
   ]
