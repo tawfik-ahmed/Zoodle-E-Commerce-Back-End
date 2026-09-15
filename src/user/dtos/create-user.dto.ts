@@ -45,9 +45,9 @@ export class CreateUserDto {
   @IsOptional()
   age?: number;
 
+  @IsOptional()
   @IsString()
   @IsUrl({}, { message: 'avatar must be a valid url' })
-  @IsOptional()
   avatar?: string;
 
   @IsString()

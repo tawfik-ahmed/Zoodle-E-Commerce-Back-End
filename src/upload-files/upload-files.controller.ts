@@ -31,7 +31,7 @@ export class UploadFilesController {
   @UseGuards(AuthGuard)
   @Roles(UserRole.ADMIN, UserRole.USER)
   public uploadImage(
-    @UploadedFile(createImageUploadPipe(1 * 1024 * 1024))
+    @UploadedFile(createImageUploadPipe(2 * 1024 * 1024))
     file: Express.Multer.File,
     @CurrentUser() payload: JwtPayloadType,
   ) {
@@ -53,7 +53,7 @@ export class UploadFilesController {
   @UseGuards(AuthGuard)
   @Roles(UserRole.ADMIN)
   public uploadProductCover(
-    @UploadedFile(createImageUploadPipe(1 * 1024 * 1024))
+    @UploadedFile(createImageUploadPipe(2 * 1024 * 1024))
     file: Express.Multer.File,
     @Body('productName') productName: string,
   ) {
@@ -72,7 +72,7 @@ export class UploadFilesController {
   @UseGuards(AuthGuard)
   @Roles(UserRole.ADMIN)
   public uploadCategoryImage(
-    @UploadedFile(createImageUploadPipe(1 * 1024 * 1024))
+    @UploadedFile(createImageUploadPipe(2 * 1024 * 1024))
     file: Express.Multer.File,
     @Body('categoryName') categoryName: string,
   ) {
@@ -84,7 +84,7 @@ export class UploadFilesController {
   @UseGuards(AuthGuard)
   @Roles(UserRole.ADMIN)
   public uploadSubCategoryImage(
-    @UploadedFile(createImageUploadPipe(1 * 1024 * 1024))
+    @UploadedFile(createImageUploadPipe(2 * 1024 * 1024))
     file: Express.Multer.File,
     @Body('subCategoryName') subCategoryName: string,
   ) {
@@ -99,7 +99,7 @@ export class UploadFilesController {
   @UseGuards(AuthGuard)
   @Roles(UserRole.ADMIN)
   public uploadProductImages(
-    @UploadedFiles(createImagesUploadPipe(1 * 1024 * 1024))
+    @UploadedFiles(createImagesUploadPipe(2 * 1024 * 1024))
     files: Array<Express.Multer.File>,
     @Body('productName') productName: string,
   ) {
@@ -118,7 +118,7 @@ export class UploadFilesController {
   @Roles(UserRole.ADMIN, UserRole.SUPPLIER)
   @UseGuards(AuthGuard)
   public uploadRequestProductCoverImage(
-    @UploadedFile(createImageUploadPipe(1 * 1024 * 1024))
+    @UploadedFile(createImageUploadPipe(2 * 1024 * 1024))
     file: Express.Multer.File,
     @Body('productName') productName: string,
   ) {

@@ -13,7 +13,8 @@ async function bootstrap() {
   app.use(helmet());
   app.use(cookieParser());
   app.enableCors({
-    origin: '*',
+    origin: ['http://localhost:5000', 'https://zoodle-e-commerce-back-end.onrender.com'],
+    credentials: true,
   });
   app.setGlobalPrefix('/api/v1');
 
@@ -24,7 +25,8 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  await app.listen(3000, '0.0.0.0');
+  await app.listen(3000);
+  // await app.listen(3000, '0.0.0.0');
 }
 
 bootstrap();

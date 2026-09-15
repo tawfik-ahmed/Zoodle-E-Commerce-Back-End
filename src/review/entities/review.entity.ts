@@ -20,7 +20,7 @@ export class Review {
   productId: number;
 
   @Column({ type: 'text', nullable: true })
-  comment?: string;
+  reviewText?: string;
 
   @Column({ type: 'int' })
   rating: number;
