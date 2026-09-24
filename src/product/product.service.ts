@@ -311,19 +311,6 @@ export class ProductService {
         });
       }
 
-      if (title && title !== product.title) {
-        const isExists = await productRepository.exists({
-          where: { title },
-        });
-
-        if (isExists) {
-          throw new BadRequestException({
-            ok: false,
-            message: 'Product with this title already exists',
-          });
-        }
-      }
-
       const [category, subCategory, brand] =
         await this.getCategorySubCategoryBrandEntities(
           categoryId ?? product.category.id,
@@ -507,16 +494,16 @@ export class ProductService {
   }
 
   public async processSale(cartItems: CartItem[], manager?: EntityManager) {
-  
     const repo = manager
       ? manager.getRepository(Product)
       : this.productRepository;
 
     for (const item of cartItems) {
-      await repo.update(item.product.id, {
+      repo.merge(item.product, {
         sold: item.product.sold + item.quantity,
         quantity: item.product.quantity - item.quantity,
       });
+      await repo.save(item.product);
     }
   }
 
@@ -635,5 +622,17 @@ export class ProductService {
       ? manager.getRepository(ProductImage)
       : this.productImageRepository;
     return repo.find({ where: { url: In(images) } });
+  }
+
+  /**
+   * Retrieves all available product colors from the database.
+   *
+   * @returns {Promise<ProductColor[]>} - Promise which resolves with an array of product color entities.
+   */
+  public async getAvailableColors(): Promise<{ok : boolean, data : ProductColor[]}> {
+    const colors = await this.productColorRepository.find({
+      order: { name: 'ASC' },
+    });
+    return {ok : true, data : colors};
   }
 }

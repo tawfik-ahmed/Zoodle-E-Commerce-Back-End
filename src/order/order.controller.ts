@@ -76,11 +76,28 @@ export class OrderController {
     return this.orderService.getMyOrders(payload);
   }
 
-  @Get(':id')
+  @Get('all')
   @Roles(UserRole.ADMIN)
   @UseGuards(AuthGuard)
-  public findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.orderService.getUserOrders(id);
+  public findAll() {
+    return this.orderService.getAllOrders();
+  }
+
+  @Get(':id')
+  @Roles(UserRole.ADMIN, UserRole.USER)
+  @UseGuards(AuthGuard)
+  public findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() payload: JwtPayloadType,
+  ) {
+    return this.orderService.getOneUserOrders(id, payload);
+  }
+
+  @Patch('deliver/:id')
+  @Roles(UserRole.ADMIN)
+  @UseGuards(AuthGuard)
+  public updateDeliver(@Param('id', ParseIntPipe) id: number) {
+    return this.orderService.updateDelivered(id);
   }
 }
 
@@ -97,7 +114,6 @@ export class WebhookController {
     @Headers('stripe-signature') signature: string,
     @Req() request: RawBodyRequest<Request>,
   ) {
-    console.log('hi');
     return this.orderService.stripeWebhook(
       request.rawBody,
       signature,

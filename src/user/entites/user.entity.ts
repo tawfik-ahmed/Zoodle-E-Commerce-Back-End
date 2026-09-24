@@ -42,7 +42,7 @@ export class User {
   @Column({ nullable: true })
   avatar: string;
 
-  @Column({ unique: true, nullable: true })
+  @Column({ nullable: true })
   phoneNumber: string;
 
   @Column({ nullable: true })

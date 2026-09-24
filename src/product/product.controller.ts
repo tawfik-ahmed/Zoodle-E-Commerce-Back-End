@@ -34,6 +34,11 @@ export class ProductController {
     return this.productService.getAllProducts(query);
   }
 
+  @Get('colors')
+  public getAvailableColors() {
+    return this.productService.getAvailableColors();
+  }
+
   @Get(':id')
   public findOne(@Param('id', ParseIntPipe) id: number) {
     return this.productService.getProduct(id);

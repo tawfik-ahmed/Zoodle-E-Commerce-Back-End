@@ -14,12 +14,12 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dtos/create-user.dto';
-import { AuthGuard } from '../auth/guards/auth.guard'; 
+import { AuthGuard } from '../auth/guards/auth.guard';
 import { Roles } from './decorators/roles.decorator';
-import { UserRole } from '../utils/enums'; 
+import { UserRole } from '../utils/enums';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { CurrentUser } from './decorators/current-user.decorator';
-import type { JwtPayloadType } from '../utils/types'; 
+import type { JwtPayloadType } from '../utils/types';
 
 // ~ api/v1/users
 @UseInterceptors(ClassSerializerInterceptor)
@@ -71,14 +71,14 @@ export class UserController {
 export class UserMeController {
   constructor(private readonly userService: UserService) {}
   @Get()
-  @Roles(UserRole.ADMIN, UserRole.USER)
+  @Roles(UserRole.ADMIN, UserRole.USER, UserRole.SUPPLIER)
   @UseGuards(AuthGuard)
   public getMe(@CurrentUser() payload: JwtPayloadType) {
     return this.userService.getMe(payload);
   }
 
   @Patch()
-  @Roles(UserRole.ADMIN, UserRole.USER)
+  @Roles(UserRole.ADMIN, UserRole.USER, UserRole.SUPPLIER)
   @UseGuards(AuthGuard)
   public updateMe(
     @CurrentUser() payload: JwtPayloadType,
@@ -88,7 +88,7 @@ export class UserMeController {
   }
 
   @Delete()
-  @Roles(UserRole.ADMIN, UserRole.USER)
+  @Roles(UserRole.ADMIN, UserRole.USER, UserRole.SUPPLIER)
   @UseGuards(AuthGuard)
   public deleteMe(@CurrentUser() payload: JwtPayloadType) {
     return this.userService.deleteMe(payload);

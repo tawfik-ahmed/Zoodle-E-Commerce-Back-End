@@ -1,6 +1,8 @@
 import {
   BadRequestException,
   ForbiddenException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -16,7 +18,6 @@ import { Product } from '../product/entities/product.entity';
 import { JwtPayloadType } from '../utils/types';
 import { UserRole } from '../utils/enums';
 import { CouponService } from '../coupon/coupon.service';
-import { Coupon } from '../coupon/entities/coupon.entity';
 
 @Injectable()
 export class CartService {
@@ -27,6 +28,7 @@ export class CartService {
 
     private readonly userService: UserService,
     private readonly productService: ProductService,
+    @Inject(forwardRef(() => CouponService))
     private readonly couponService: CouponService,
     private readonly dataSource: DataSource,
   ) {}
@@ -276,13 +278,9 @@ export class CartService {
 
       userCart.coupons.push(coupon);
 
-      const couponsDiscount = userCart.coupons.reduce(
-        (sum, c) => sum + (Number(c.discount) || 0),
-        0,
-      );
       userCart.totalPriceAfterDiscount = Math.max(
         0,
-        userCart.totalPrice - couponsDiscount,
+        userCart.totalPriceAfterDiscount - coupon.discount,
       );
 
       await cartRepo.save(userCart);

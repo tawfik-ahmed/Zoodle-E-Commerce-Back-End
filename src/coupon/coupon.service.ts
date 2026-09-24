@@ -1,19 +1,28 @@
 import {
   BadRequestException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateCouponDto } from './dtos/create-coupon.dto';
 import { UpdateCouponDto } from './dtos/update-coupon.dto';
-import { EntityManager, Repository } from 'typeorm';
+import { EntityManager, In, MoreThanOrEqual, Not, Repository } from 'typeorm';
 import { Coupon } from './entities/coupon.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { JwtPayloadType } from '../utils/types';
+import { CartService } from '../cart/cart.service';
 
 @Injectable()
 export class CouponService {
   constructor(
     @InjectRepository(Coupon)
     private readonly couponRepository: Repository<Coupon>,
+
+    @Inject(forwardRef(() => CartService))
+    private readonly cartService: CartService,
+
+    private readonly entityManager: EntityManager,
   ) {}
 
   /**
@@ -103,7 +112,9 @@ export class CouponService {
    * @returns {Promise<Coupon>} - Coupon object.
    */
   public async getOneCouponById(id: number, manager?: EntityManager) {
-    const repo = manager ? manager.getRepository(Coupon) : this.couponRepository;
+    const repo = manager
+      ? manager.getRepository(Coupon)
+      : this.couponRepository;
     const coupon = await repo.findOne({ where: { id } });
 
     if (!coupon) {
@@ -123,7 +134,9 @@ export class CouponService {
    * @returns {Promise<Coupon>} - Coupon object.
    */
   public async getOneCouponByName(name: string, manager?: EntityManager) {
-    const repo = manager ? manager.getRepository(Coupon) : this.couponRepository;
+    const repo = manager
+      ? manager.getRepository(Coupon)
+      : this.couponRepository;
     const coupon = await repo.findOne({ where: { name } });
 
     if (!coupon) {
@@ -131,5 +144,29 @@ export class CouponService {
     }
 
     return coupon;
+  }
+
+  /**
+   * Retrieves all available coupons for a user.
+   *
+   * @param {JwtPayloadType} payload - User payload containing user id.
+   * @returns {Promise<Coupon[]>} - Array of available coupons.
+   * @throws {NotFoundException} If user cart is not found.
+   */
+  public async getAllAvailableCoupons(payload: JwtPayloadType) {
+    return this.entityManager.transaction(async (manager: EntityManager) => {
+      const userCart = await this.cartService.getCartByUserId(
+        payload.id,
+        manager,
+      );
+      const couponIds = userCart?.coupons.map((coupon) => coupon.id) || [];
+
+      return this.couponRepository.find({
+        where: {
+          id: Not(In(couponIds)),
+          expireDate: MoreThanOrEqual(new Date()),
+        },
+      });
+    });
   }
 }

@@ -1,8 +1,10 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { OAuthService } from './ouath.service';
 import { AuthGuard } from '@nestjs/passport';
 import type { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
+import { FRONTEND_URL } from '../utils/constants';
+import passport from 'passport';
 
 // ~ api/v1/oauth
 @Controller('oauth')
@@ -14,8 +16,12 @@ export class OAuthController {
 
   @Get('google/sign')
   @UseGuards(AuthGuard('google'))
-  public googleLogin() {
-    return {};
+  public googleLogin( @Query('redirect') redirect: string,@Req() req: Request,
+    @Res() res: Response,) {
+    return passport.authenticate('google', {
+      scope: ['profile', 'email'],
+      state: redirect || '/',
+    })(req, res);
   }
 
   @Get('google/callback')
@@ -50,6 +56,10 @@ export class OAuthController {
       path: '/api/v1/auth/refresh-token',
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
-    return rest;
+
+    const frontendUrl = FRONTEND_URL;
+    const redirectUrl = req.query.state || frontendUrl;
+
+    return res.redirect(redirectUrl);
   }
 }

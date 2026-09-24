@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 import { Supplier } from './entities/supplier.entity';
 import { UpdateSupplierDto } from './dtos/update-supplier.dto';
 import { User } from '../user/entites/user.entity';
-import { UserRole } from '../utils/enums';
+import { SupplierStatus, UserRole } from '../utils/enums';
 import { JwtPayloadType } from '../utils/types';
 
 @Injectable()
@@ -75,6 +75,10 @@ export class SupplierService {
     return supplier;
   }
 
+  public getMe(payload: JwtPayloadType) {
+    return this.getSupplierByUserId(payload.id);
+  }
+
   /**
    * Retrieves a supplier by user id.
    *
@@ -128,6 +132,86 @@ export class SupplierService {
     };
   }
 
+  public async getMyState(payload: JwtPayloadType): Promise<{
+    ok: boolean;
+    data: { status: string; rejectionReason: string };
+  }> {
+    const supplier = await this.supplierRepository.findOne({
+      where: {
+        user: {
+          id: payload.id,
+        },
+      },
+      relations: {
+        user: true,
+      },
+    });
+
+    if (!supplier) {
+      throw new NotFoundException({
+        ok: false,
+        message: 'Supplier not found',
+      });
+    }
+
+    return {
+      ok: true,
+      data: {
+        status: supplier.status,
+        rejectionReason: supplier.rejectionReason,
+      },
+    };
+  }
+
+  /**
+   * Updates a supplier by id.
+   *
+   * @throws {NotFoundException} If supplier does not exist.
+   *
+   * @param {number} id - Supplier id.
+   * @param {UpdateSupplierDto} updateSupplierDto - Supplier data.
+   * @returns {Promise<{ ok: boolean; message: string; data: Supplier }>} - Object with ok property, supplier data and success message.
+   */
+  public async updateSupplier(id: number, dto: UpdateSupplierDto) {
+    const supplier = await this.getSupplierById(id);
+
+    if (!supplier.isApproved) {
+      throw new BadRequestException({
+        ok: false,
+        message: 'Your account is not approved yet',
+      });
+    }
+
+    this.supplierRepository.merge(supplier, dto);
+    await this.supplierRepository.save(supplier);
+
+    return {
+      ok: true,
+      message: 'Supplier updated successfully',
+      data: supplier,
+    };
+  }
+
+  public async deleteSupplier(id: number) {
+    const supplier = await this.getSupplierById(id);
+    const user = await this.userRepository.findOne({
+      where: { id: supplier.user.id },
+    });
+
+    if (!user) {
+      throw new NotFoundException({ ok: false, message: 'User not found' });
+    }
+
+    user.role = UserRole.USER;
+
+    await this.userRepository.save(user);
+    await this.supplierRepository.remove(supplier);
+
+    return {
+      ok: true,
+      message: 'Supplier deleted successfully',
+    };
+  }
   /**
    * Updates a supplier by id.
    *
@@ -209,6 +293,7 @@ export class SupplierService {
     supplier.pendingCompanyName = dto.companyName ?? supplier.companyName;
     supplier.pendingWebsite = dto.website ?? supplier.website;
     supplier.hasPendingUpdate = true;
+    supplier.rejectionReason = null!;
 
     await this.supplierRepository.save(supplier);
 
@@ -245,6 +330,7 @@ export class SupplierService {
     supplier.pendingWebsite = null!;
     supplier.hasPendingUpdate = false;
     supplier.isApproved = true;
+    supplier.status = SupplierStatus.APPROVED;
 
     await this.userRepository.save(supplier.user);
     await this.supplierRepository.save(supplier);
@@ -275,6 +361,7 @@ export class SupplierService {
       });
     }
 
+    supplier.status = SupplierStatus.REJECTED;
     supplier.rejectionReason = reason ?? 'Supplier request rejected';
 
     await this.supplierRepository.save(supplier);
@@ -286,6 +373,26 @@ export class SupplierService {
     };
   }
 
+  /**
+   * Retrieves all rejected suppliers.
+   *
+   * @returns {Promise<{ ok: boolean; data: Supplier[] }>} - Object with ok property and supplier data.
+   */
+  public async getRejectedSuppliers() {
+    const suppliers = await this.supplierRepository.find({
+      where: {
+        status: SupplierStatus.REJECTED,
+      },
+      relations: {
+        user: true,
+      },
+    });
+
+    return {
+      ok: true,
+      data: suppliers,
+    };
+  }
   /**
    * Retrieves the rejection reason for a supplier by id.
    *
@@ -419,7 +526,7 @@ export class SupplierService {
   public async getPendingSuppliers() {
     const suppliers = await this.supplierRepository.find({
       where: {
-        isApproved: false,
+        status: SupplierStatus.PENDING,
       },
       relations: {
         user: true,

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -22,6 +23,16 @@ export class SupplierController {
   constructor(private readonly supplierService: SupplierService) {}
 
   /**
+   * Get my supplier.
+   */
+  @Get('me')
+  @Roles(UserRole.SUPPLIER)
+  @UseGuards(AuthGuard)
+  public getMySupplier(@CurrentUser() payload: JwtPayloadType) {
+    return this.supplierService.getMe(payload);
+  }
+
+  /**
    * Get all pending supplier requests.
    */
   @Get('pending')
@@ -29,6 +40,13 @@ export class SupplierController {
   @UseGuards(AuthGuard)
   public getPendingSuppliers() {
     return this.supplierService.getPendingSuppliers();
+  }
+
+  @Get('get-my-state')
+  @Roles(UserRole.USER, UserRole.SUPPLIER)
+  @UseGuards(AuthGuard)
+  public getMe(@CurrentUser() payload: JwtPayloadType) {
+    return this.supplierService.getMyState(payload);
   }
 
   /**
@@ -39,6 +57,16 @@ export class SupplierController {
   @UseGuards(AuthGuard)
   public getPendingUpdates() {
     return this.supplierService.getPendingUpdates();
+  }
+
+  /**
+   * Get all rejected suppliers.
+   */
+  @Get('rejected')
+  @Roles(UserRole.ADMIN)
+  @UseGuards(AuthGuard)
+  public getRejectedSuppliers() {
+    return this.supplierService.getRejectedSuppliers();
   }
 
   /**
@@ -70,6 +98,31 @@ export class SupplierController {
   }
 
   /**
+   * Update supplier by id (Admin Function).
+   */
+
+  @Patch(':id')
+  @Roles(UserRole.ADMIN)
+  @UseGuards(AuthGuard)
+  public updateSupplier(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateSupplierDto,
+  ) {
+    return this.supplierService.updateSupplier(id, dto);
+  }
+
+  /**
+   * Delete supplier by id (Admin Function).
+   */
+
+  @Delete(':id')
+  @Roles(UserRole.ADMIN)
+  @UseGuards(AuthGuard)
+  public deleteSupplier(@Param('id', ParseIntPipe) id: number) {
+    return this.supplierService.deleteSupplier(id);
+  }
+
+  /**
    * Approve supplier registration.
    */
   @Patch(':id/approve')
@@ -98,7 +151,10 @@ export class SupplierController {
   @Get(':id/reject-reason')
   @Roles(UserRole.ADMIN, UserRole.SUPPLIER)
   @UseGuards(AuthGuard)
-  public getSupplierRejectionReason(@Param('id', ParseIntPipe) id: number, @CurrentUser() payload: JwtPayloadType) {
+  public getSupplierRejectionReason(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() payload: JwtPayloadType,
+  ) {
     return this.supplierService.getSupplierRejectionReason(id, payload);
   }
 
@@ -131,7 +187,10 @@ export class SupplierController {
   @Get(':id/reject-update-reason')
   @Roles(UserRole.ADMIN, UserRole.SUPPLIER)
   @UseGuards(AuthGuard)
-  public getSupplierUpdateRejectionReason(@Param('id', ParseIntPipe) id: number, @CurrentUser() payload: JwtPayloadType) {
+  public getSupplierUpdateRejectionReason(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() payload: JwtPayloadType,
+  ) {
     return this.supplierService.getSupplierUpdateRejectionReason(id, payload);
   }
 }

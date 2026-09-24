@@ -17,6 +17,7 @@ import { CreateRequestProductDto } from './dtos/create-request-product.dto';
 import { CurrentUser } from '../user/decorators/current-user.decorator';
 import type { JwtPayloadType } from '../utils/types';
 import { UpdateRequestProductDto } from './dtos/update-request-product.dto';
+import { RejectRequestProductDto } from './dtos/reject-request-product.dto';
 
 // ~api/v1/request-products
 @Controller('request-products')
@@ -64,6 +65,13 @@ export class RequestProductController {
     return this.requestProductService.getAllRejectedRequestProducts(payload.id);
   }
 
+  @Get('my-requests')
+  @Roles(UserRole.SUPPLIER)
+  @UseGuards(AuthGuard)
+  public getMyRequestProducts(@CurrentUser() payload: JwtPayloadType) {
+    return this.requestProductService.getAllMyRequestProducts(payload.id);
+  }
+
   @Get(':id')
   @Roles(UserRole.ADMIN, UserRole.SUPPLIER)
   @UseGuards(AuthGuard)
@@ -109,7 +117,13 @@ export class RequestProductController {
   @Post('reject/:id')
   @Roles(UserRole.ADMIN)
   @UseGuards(AuthGuard)
-  public rejectRequestProduct(@Param('id', ParseIntPipe) id: number) {
-    return this.requestProductService.rejectRequestProduct(id);
+  public rejectRequestProduct(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: RejectRequestProductDto,
+  ) {
+    return this.requestProductService.rejectRequestProduct(
+      id,
+      dto.rejectionReason,
+    );
   }
 }

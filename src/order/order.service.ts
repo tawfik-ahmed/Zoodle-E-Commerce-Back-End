@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { CreateOrderDto } from './dtos/create-order.dto';
 import { UpdateOrderDto } from './dtos/update-order.dto';
-import { PaymentMethod } from '../utils/enums';
+import { PaymentMethod, UserRole } from '../utils/enums';
 import { JwtPayloadType, paymentMethods } from '../utils/types';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
@@ -121,11 +121,7 @@ export class OrderService {
 
       if (paymentMethodType === PaymentMethod.CASH) {
         const order = orderRepo.create(orderData);
-
-        if (orderData.orderPrice === 0) {
-          await this.productService.processSale(orderData.cartItems, manager);
-        }
-
+        await this.productService.processSale(orderData.cartItems, manager);
         await orderRepo.save(order);
         await this.cartService.resetCart(userId, manager);
 
@@ -140,33 +136,83 @@ export class OrderService {
         const order = orderRepo.create(orderData);
         await orderRepo.save(order);
 
-        const session = await this.stripe.checkout.sessions.create({
-          line_items: orderData.cartItems.map((item: CartItem) => {
-            const pricePerUnit =
-              item.product.price - (item.product.discount || 0);
+        let totalCartItemsPrice = 0;
 
-            return {
-              price_data: {
-                currency: 'egp',
-                unit_amount: Math.round(pricePerUnit * 100),
-                tax_behavior: 'exclusive',
-                product_data: {
-                  name: item.product.title,
-                  description: `Order #${order.id}`,
-                  images: [
-                    item.product.imageCover,
-                    ...item.product.images.map((img) => img.url),
-                  ],
-                  metadata: {
-                    orderId: String(order.id),
-                    productId: String(item.product.id),
-                    shippingAddress: JSON.stringify(shippingAddress),
-                  },
+        const taxPercentage = Number(
+          ((taxPrice / cart.totalPriceAfterDiscount) * 100).toFixed(2),
+        );
+        const taxRate = await this.stripe.taxRates.create({
+          display_name: 'Tax',
+          percentage: taxPercentage,
+          inclusive: false,
+        });
+
+        const lineItems = orderData.cartItems.map((item: CartItem) => {
+          totalCartItemsPrice += item.price;
+
+          const pricePerUnit =
+            item.product.price - (item.product.discount || 0);
+
+          return {
+            price_data: {
+              currency: 'egp',
+              unit_amount: Math.round(pricePerUnit * 100),
+              product_data: {
+                name: item.product.title,
+                description: `Order #${order.id}`,
+                images: [
+                  item.product.imageCover,
+                  ...item.product.images.map((img) => img.url),
+                ],
+                metadata: {
+                  orderId: String(order.id),
+                  productId: String(item.product.id),
+                  shippingAddress: JSON.stringify(shippingAddress),
                 },
               },
-              quantity: item.quantity,
-            };
-          }),
+            },
+            quantity: item.quantity,
+            tax_rates: [taxRate.id],
+          };
+        });
+
+        let couponDiscount = totalCartItemsPrice - cart.totalPriceAfterDiscount;
+        let discounts: { coupon: string }[] = [];
+
+        if (couponDiscount > 0) {
+          const coupon = await this.stripe.coupons.create({
+            amount_off: Math.round(couponDiscount * 100),
+            currency: 'egp',
+            duration: 'once',
+          });
+
+          discounts = [
+            {
+              coupon: coupon.id,
+            },
+          ];
+        }
+
+        const session = await this.stripe.checkout.sessions.create({
+          line_items: lineItems,
+
+          discounts,
+
+          shipping_options:
+            shippingPrice > 0
+              ? [
+                  {
+                    shipping_rate_data: {
+                      type: 'fixed_amount',
+                      fixed_amount: {
+                        amount: Math.round(shippingPrice * 100),
+                        currency: 'egp',
+                      },
+                      display_name: 'Shipping',
+                    },
+                  },
+                ]
+              : [],
 
           mode: 'payment',
 
@@ -236,12 +282,13 @@ export class OrderService {
     }
 
     if (updateOrderDto.isPaid) {
-      await this.orderRepository.update(orderId, {
+      this.orderRepository.merge(order, {
         ...updateOrderDto,
         isPaid: true,
         isDelivered: true,
         deliveredAt: new Date(),
       });
+
       await this.orderRepository.save(order);
     }
 
@@ -303,7 +350,6 @@ export class OrderService {
           relations: ['user', 'cartItems', 'cartItems.product'],
         });
 
-        console.log(order);
         if (!order) {
           throw new NotFoundException({
             ok: false,
@@ -311,16 +357,16 @@ export class OrderService {
           });
         }
 
-        await this.orderRepository.update(order.id, {
+        this.orderRepository.merge(order, {
           isPaid: true,
-          isDelivered: true,
+          isDelivered: false,
           deliveredAt: new Date(),
         });
         await this.orderRepository.save(order);
 
         await Promise.all([
-          await this.cartService.resetCart(order.user.id),
           await this.productService.processSale(order.cartItems),
+          await this.cartService.resetCart(order.user.id),
         ]);
 
         await this.mailerService.sendMail({
@@ -342,6 +388,39 @@ export class OrderService {
   }
 
   /**
+   * Update an order delivered status.
+   *
+   * @param {number} orderId - Order id.
+   * @returns {Promise<{ ok: boolean; data: Order[] }>} - Object with ok property and orders data.
+   * @throws {NotFoundException} If order not found.
+   */
+  public async updateDelivered(orderId: number) {
+    const order = await this.orderRepository.findOne({
+      where: { id: orderId },
+      relations: ['user'],
+    });
+
+    if (!order) {
+      throw new NotFoundException({
+        ok: false,
+        message: 'Order not found',
+      });
+    }
+
+    this.orderRepository.merge(order, {
+      isDelivered: true,
+      deliveredAt: new Date(),
+    });
+    await this.orderRepository.save(order);
+
+    return {
+      ok: true,
+      message: 'Order updated successfully',
+      order,
+    };
+  }
+
+  /**
    * Retrieves user orders.
    *
    * @param {JwtPayloadType} payload - User data.
@@ -351,6 +430,17 @@ export class OrderService {
   public async getMyOrders(payload: JwtPayloadType) {
     const { id: userId } = payload;
     return this.getUserOrders(userId);
+  }
+
+  /**
+   * Retrieves all orders.
+   *
+   * @returns {Promise<Order[]>} - Orders data.
+   */
+  public getAllOrders() {
+    return this.orderRepository.find({
+      relations: ['user', 'cartItems', 'cartItems.product'],
+    });
   }
 
   /**
@@ -364,7 +454,38 @@ export class OrderService {
     const user = await this.userService.getUserById(userId);
     const orders = await this.orderRepository.find({
       where: { user: { id: user.id } },
+      relations: ['user', 'cartItems', 'cartItems.product'],
     });
     return { ok: true, data: orders };
+  }
+
+  /**
+   * Retrieves user orders.
+   *
+   * @param {number} orderId - Order id.
+   * @param {JwtPayloadType} payload - User data.
+   * @returns {Promise<{ ok: boolean; data: Order[] }>} - Object with ok property and orders data.
+   * @throws {NotFoundException} If user does not exist.
+   */
+  public async getOneUserOrders(orderId: number, payload: JwtPayloadType) {
+    const { id: userId } = payload;
+    const user = await this.userService.getUserById(userId);
+    const order = await this.orderRepository.findOne({
+      where: { id: orderId, user: { id: user.id } },
+      relations: ['user', 'cartItems', 'cartItems.product'],
+    });
+
+    if (order?.user.id !== user.id && payload.role !== UserRole.ADMIN) {
+      throw new BadRequestException({
+        ok: false,
+        message: 'You are not authorized to view this order',
+      });
+    }
+
+    if (!order) {
+      throw new NotFoundException({ ok: false, message: 'Order not found' });
+    }
+
+    return { ok: true, data: order };
   }
 }

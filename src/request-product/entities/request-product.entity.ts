@@ -48,7 +48,6 @@ export class RequestProduct {
   @Column({ default: 0 })
   discount: number;
 
-  @Exclude()
   @ManyToMany(() => ProductColor)
   @JoinTable()
   colors: ProductColor[];
@@ -66,7 +65,9 @@ export class RequestProduct {
   brand: Brand;
 
   @Exclude()
-  @ManyToOne(() => Supplier, (supplier) => supplier.requestProducts)
+  @ManyToOne(() => Supplier, (supplier) => supplier.requestProducts, {
+    onDelete: 'CASCADE',
+  })
   supplier: Supplier;
 
   @Column({
@@ -75,6 +76,9 @@ export class RequestProduct {
     default: RequestProductStatus.PENDING,
   })
   status: RequestProductStatus;
+
+  @Column({ nullable: true })
+  rejectionReason: string;
 
   @CreateDateColumn({ type: 'timestamp', default: () => CURRENT_TIMESTAMP })
   createdAt: Date;

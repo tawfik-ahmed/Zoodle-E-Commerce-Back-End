@@ -48,8 +48,7 @@ export class CreateRequestProductDto {
   @IsNumber({}, { message: 'brandId must be an integer' })
   brandId: number;
 
-  @IsOptional()
   @IsArray({ message: 'colors must be an array' })
-  @IsNumber({}, { each: true, message: 'each color id must be an integer' })
-  colorIds?: number[];
+  @IsOptional()
+  colorNames?: string[];
 }

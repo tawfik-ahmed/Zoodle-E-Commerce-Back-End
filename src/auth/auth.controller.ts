@@ -61,6 +61,28 @@ export class AuthController {
     return rest;
   }
 
+  @Post('sign-out')
+  public signOut(@Res({ passthrough: true }) res: Response) {
+    const isProduction =
+      this.configService.get<string>('NODE_ENV') === 'production';
+
+    res.clearCookie('access_token', {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
+      maxAge: 15 * 60 * 1000,
+    });
+
+    res.clearCookie('refresh_token', {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
+      path: '/api/v1/auth/refresh-token',
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
+    return { ok: true };
+  }
+
   @Post('reset-password')
   public resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     return this.authService.resetPassword(resetPasswordDto);
@@ -81,12 +103,12 @@ export class AuthController {
   }
 
   @Get('verify-email')
-public verifyEmail(
-  @Query('email') email: string,
-  @Query('token') token: string,
-) {
-  return this.authService.verifyEmail(email, token);
-}
+  public verifyEmail(
+    @Query('email') email: string,
+    @Query('token') token: string,
+  ) {
+    return this.authService.verifyEmail(email, token);
+  }
 
   @Post('change-password')
   public changePassword(@Body() changePasswordDto: SignInDto) {

@@ -1,5 +1,6 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
@@ -9,6 +10,7 @@ import { User } from '../../user/entites/user.entity';
 import { CartItem } from '../../cart/entities/cart-item.entity';
 import { PaymentMethod } from '../../utils/enums';
 import { Exclude } from 'class-transformer';
+import { CURRENT_TIMESTAMP } from '../../utils/constants';
 
 class ShippingAddress {
   @Column({ nullable: true })
@@ -107,4 +109,10 @@ export class Order {
 
   @Column(() => ShippingAddress)
   shippingAddress: ShippingAddress;
+
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => CURRENT_TIMESTAMP,
+  })
+  createdAt: Date;
 }

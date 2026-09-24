@@ -6,19 +6,24 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RequestProduct } from './entities/request-product.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CreateRequestProductDto } from './dtos/create-request-product.dto';
 import { JwtPayloadType } from '../utils/types';
 import { UpdateRequestProductDto } from './dtos/update-request-product.dto';
 import { SupplierService } from '../supplier/supplier.service';
 import { RequestProductStatus, UserRole } from '../utils/enums';
 import { ProductService } from '../product/product.service';
+import { ProductColor } from '../product/entities/product-color.entity';
 
 @Injectable()
 export class RequestProductService {
   constructor(
     @InjectRepository(RequestProduct)
     private readonly requestProductRepository: Repository<RequestProduct>,
+
+    @InjectRepository(ProductColor)
+    private readonly productColorRepository: Repository<ProductColor>,
+
     private readonly supplierService: SupplierService,
     private readonly productService: ProductService,
   ) {}
@@ -62,8 +67,14 @@ export class RequestProductService {
       );
 
     const { categoryId, subCategoryId, brandId, ...rest } = dto;
+
+    const colorEntities = dto.colorNames?.length
+      ? await this.productColorRepository.findBy({ name: In(dto.colorNames) })
+      : [];
+
     const requestProduct = this.requestProductRepository.create({
       ...rest,
+      colors: colorEntities,
       supplier,
       brand,
       category,
@@ -91,10 +102,35 @@ export class RequestProductService {
   }> {
     const requestProducts = await this.requestProductRepository.find({
       relations: {
-        supplier: {
-          user: true,
-        },
+        supplier: { user: true },
+        category: true,
+        subCategory: true,
+        brand: true,
+        colors: true,
       },
+    });
+    return { ok: true, data: requestProducts };
+  }
+
+  /**
+   * Retrieves all my request products.
+   *
+   * @param {number} id - User id.
+   * @returns {Promise<{ ok: boolean, data: RequestProduct[] }>} - Object with ok property and array of request product data.
+   */
+  public async getAllMyRequestProducts(id: number) {
+    const supplier = await this.supplierService.getSupplierByUserId(id);
+    const requestProducts = await this.requestProductRepository.find({
+      where: { supplier: { id: supplier.id } },
+    relations: {
+      supplier: {
+        user: true,
+      },
+      category: true,
+      subCategory: true,
+      brand: true,
+      colors: true, 
+    },
     });
     return { ok: true, data: requestProducts };
   }
@@ -224,6 +260,7 @@ export class RequestProductService {
         message: 'You are not allowed to update this request product',
       });
     }
+
     if (
       requestProduct.supplier.user.id !== payload.id &&
       payload.role !== UserRole.ADMIN
@@ -234,12 +271,26 @@ export class RequestProductService {
       });
     }
 
+    const { colorNames, ...restDto } = updateRequestProductDto;
+
+    let colorEntities: ProductColor[] = [];
+    if (colorNames && colorNames.length > 0) {
+      colorEntities = await this.productColorRepository.findBy({
+        name: In(colorNames),
+      });
+    }
+
     const updatedRequestProduct = this.requestProductRepository.merge(
       requestProduct,
-      updateRequestProductDto,
+      restDto,
     );
 
+    if (colorNames) {
+      updatedRequestProduct.colors = colorEntities;
+    }
+
     await this.requestProductRepository.save(updatedRequestProduct);
+
     return {
       ok: true,
       message: 'Request product updated successfully',
@@ -336,7 +387,9 @@ export class RequestProductService {
       brandId: requestProduct.brand.id,
       categoryId: requestProduct.category.id,
       subCategoryId: requestProduct.subCategory.id,
+      colors: requestProduct.colors.map((color) => color.name),
     };
+
     const product = await this.productService.createProduct(obj);
     requestProduct.status = RequestProductStatus.APPROVED;
     await this.requestProductRepository.save(requestProduct);
@@ -349,11 +402,16 @@ export class RequestProductService {
    * @throws {NotFoundException} If request product does not exist.
    *
    * @param {number} id - Request product id.
+   * @param {string} rejectionReason - Reason for rejection.
    * @returns {Promise<{ ok: boolean; message: string }>} - Object with ok property and success message.
    */
-  public async rejectRequestProduct(requestProductId: number) {
+  public async rejectRequestProduct(
+    requestProductId: number,
+    rejectionReason: string,
+  ) {
     const requestProduct = await this.getRequestProductById(requestProductId);
     requestProduct.status = RequestProductStatus.REJECTED;
+    requestProduct.rejectionReason = rejectionReason;
     await this.requestProductRepository.save(requestProduct);
     return { ok: true, message: 'Request product rejected' };
   }

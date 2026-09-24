@@ -18,7 +18,7 @@ import { UpdateUserDto } from './dtos/update-user.dto';
 import { JwtPayloadType } from '../utils/types';
 import { AuthService } from '../auth/auth.service';
 import { Supplier } from '../supplier/entities/supplier.entity';
-import { UserRole } from '../utils/enums';
+import { SupplierStatus, UserRole } from '../utils/enums';
 
 @Injectable()
 export class UserService {
@@ -273,6 +273,7 @@ export class UserService {
         supplier.website = dto.website;
         supplier.rejectionReason = null!;
         supplier.isApproved = false;
+        supplier.status = SupplierStatus.PENDING;
 
         await this.supplierRepository.save(supplier);
 
@@ -297,6 +298,7 @@ export class UserService {
           website: dto.website,
           user,
           isApproved: false,
+          status: SupplierStatus.PENDING,
         }),
       );
 

@@ -19,3 +19,9 @@ export enum RequestProductStatus {
   APPROVED = 'approved',
   REJECTED = 'rejected',
 }
+
+export enum SupplierStatus {
+  PENDING = 'pending',
+  APPROVED = 'approved',
+  REJECTED = 'rejected',
+}

@@ -50,7 +50,7 @@ export class AuthService {
         message: 'User already exists, please sign in',
       });
     }
-
+    
     const hashedPassword = await this.generateHashedPassword(dto.password);
     const emailVerificationToken = this.generateEmailVerificationToken();
 
