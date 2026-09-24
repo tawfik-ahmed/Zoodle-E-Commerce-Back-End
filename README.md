@@ -6,7 +6,7 @@ A production-ready RESTful API built with **NestJS**, **TypeORM**, and **MySQL**
 
 ## 🌐 Live Frontend
 
-Try Zoodle E-Commerce platform through the live frontend:
+Try Zoodle E-Commerce platform through the live frontend.<br>
 **Frontend:** **https://zoodle-eco.vercel.app**
 
 ### Supplier Test Account
