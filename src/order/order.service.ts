@@ -18,11 +18,12 @@ import Stripe from 'stripe';
 import { ConfigService } from '@nestjs/config';
 import { CartItem } from '../cart/entities/cart-item.entity';
 import { ProductService } from '../product/product.service';
-import { MailerService } from '@nestjs-modules/mailer';
+import { BrevoClient } from '@getbrevo/brevo';
 
 @Injectable()
 export class OrderService {
   private readonly stripe;
+  private readonly brevo: BrevoClient;
 
   constructor(
     @InjectRepository(Order)
@@ -34,11 +35,14 @@ export class OrderService {
     private readonly dataSource: DataSource,
     private readonly configService: ConfigService,
     private readonly productService: ProductService,
-    private readonly mailerService: MailerService,
   ) {
     this.stripe = new Stripe(
       this.configService.get<string>('STRIPE_SECRET_KEY')!,
     );
+
+    this.brevo = new BrevoClient({
+      apiKey: this.configService.get<string>('BREVO_API_KEY')!,
+    });
   }
 
   /**
@@ -292,16 +296,24 @@ export class OrderService {
       await this.orderRepository.save(order);
     }
 
-    await this.mailerService.sendMail({
-      from: `Zoodle E-Commerce <${this.configService.get<string>('GMAIL_USER')}>`,
-      to: order.user.email,
-      subject: 'Zoodle E-Commerce - Order Paid Successfully (Cash)',
-      html: `<div>
-        <h1>Order #${order.id} has been paid</h1>
-        <p>Thank you for using our service!</p>
-        <p>Best regards,<br/>Zoodle E-Commerce</p>
-      </div>`,
-    });
+    await this.brevo.transactionalEmails.sendTransacEmail({
+  sender: {
+    name: 'Zoodle E-Commerce',
+    email: this.configService.get<string>('BREVO_FROM_EMAIL')!,
+  },
+  to: [
+    {
+      email: order.user.email,
+    },
+  ],
+  subject: 'Zoodle E-Commerce - Order Paid Successfully (Cash)',
+  htmlContent: `<div>
+    <h1>Order #${order.id} has been paid</h1>
+    <p>Thank you for using our service!</p>
+    <p>Best regards,<br/>Zoodle E-Commerce</p>
+  </div>`,
+});
+
     return {
       ok: true,
       message: 'Order updated successfully',
@@ -369,12 +381,19 @@ export class OrderService {
           await this.cartService.resetCart(order.user.id),
         ]);
 
-        await this.mailerService.sendMail({
-          from: `Zoodle E-Commerce <${this.configService.get<string>('GMAIL_USER')}>`,
-          to: order.user.email,
-          subject: 'Order Paid Successfully',
-          html: `<h1>Paid</h1>`,
-        });
+        await this.brevo.transactionalEmails.sendTransacEmail({
+  sender: {
+    name: 'Zoodle E-Commerce',
+    email: this.configService.get<string>('BREVO_FROM_EMAIL')!,
+  },
+  to: [
+    {
+      email: order.user.email,
+    },
+  ],
+  subject: 'Order Paid Successfully',
+  htmlContent: `<h1>Paid</h1>`,
+});
 
         break;
       default:

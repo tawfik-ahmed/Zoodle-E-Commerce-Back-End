@@ -4,7 +4,6 @@ import { UserModule } from './user/user.module';
 import { User } from './user/entites/user.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
-import { MailerModule } from '@nestjs-modules/mailer';
 import { CategoryModule } from './category/category.module';
 import { Category } from './category/entities/category.entity';
 import { SubCategoryModule } from './sub-category/sub-category.module';
@@ -43,20 +42,6 @@ import { OAuthModule } from './oauth/oauth.module';
         limit: 10,
       },
     ]),
-    MailerModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        transport: {
-          host: 'smtp.gmail.com',
-          port: 587,
-          secure: false,
-          auth: {
-            user: config.get<string>('GMAIL_USER'),
-            pass: config.get<string>('GMAIL_APP_PASSWORD'),
-          },
-        },
-      }),
-    }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
@@ -85,7 +70,7 @@ import { OAuthModule } from './oauth/oauth.module';
         ],
         namingStrategy: new SnakeNamingStrategy(),
         // dropSchema: true,
-        synchronize: true,
+        // synchronize: true,
       }),
     }),
     ConfigModule.forRoot({

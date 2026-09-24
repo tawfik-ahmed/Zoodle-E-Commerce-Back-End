@@ -14,20 +14,25 @@ import { JwtService } from '@nestjs/jwt';
 import { SignUpDto } from './dtos/sign-up.dto';
 import { SignInDto } from './dtos/sign-in.dto';
 import { ResetPasswordDto } from './dtos/reset-password.dto';
-import { MailerService } from '@nestjs-modules/mailer';
 import { randomBytes } from 'crypto';
 import { FRONTEND_URL } from '../utils/constants';
+import { BrevoClient } from '@getbrevo/brevo';
 
 @Injectable()
 export class AuthService {
+  private readonly brevo: BrevoClient;
+
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
     private readonly config: ConfigService,
     private readonly jwtService: JwtService,
-    private readonly mailerService: MailerService,
-  ) {}
+  ) {
+    this.brevo = new BrevoClient({
+      apiKey: this.config.get<string>('BREVO_API_KEY')!,
+    });
+  }
 
   /**
    * Signs up a new user.
@@ -50,7 +55,7 @@ export class AuthService {
         message: 'User already exists, please sign in',
       });
     }
-    
+
     const hashedPassword = await this.generateHashedPassword(dto.password);
     const emailVerificationToken = this.generateEmailVerificationToken();
 
@@ -145,23 +150,32 @@ export class AuthService {
   ): Promise<{ ok: boolean; message: string }> {
     const { email } = dto;
     const user = await this.userService.getUserByEmail(email);
+
     const verificationCode = this.generateVerificationCode();
     user.verificationCode = verificationCode;
+
     await this.userRepository.save(user);
 
-    await this.mailerService.sendMail({
-      from: `Zoodle E-Commerce <${this.config.get<string>('GMAIL_USER')}>`,
-      to: email,
+    await this.brevo.transactionalEmails.sendTransacEmail({
+      sender: {
+        name: 'Zoodle E-Commerce',
+        email: this.config.get<string>('BREVO_FROM_EMAIL')!,
+      },
+      to: [
+        {
+          email,
+        },
+      ],
       subject: 'Zoodle E-Commerce - Reset Password',
-      html: `<div>
-        <h1>Forgot your password? If you didn't request a password reset, you can safely ignore this email.</h1>
-        <p>Verification Code: 
-          <span style="font-weight: bold; font-size: 24px; color: red;">${verificationCode}</span>
-        </p>
-        <p>Don't share this code with anyone.</p>
-        <p>Thank you for using our service!</p>
-        <p>Best regards,<br/>Zoodle E-Commerce</p>
-      </div>`,
+      htmlContent: `<div>
+      <h1>Forgot your password? If you didn't request a password reset, you can safely ignore this email.</h1>
+      <p>Verification Code:
+        <span style="font-weight: bold; font-size: 24px; color: red;">${verificationCode}</span>
+      </p>
+      <p>Don't share this code with anyone.</p>
+      <p>Thank you for using our service!</p>
+      <p>Best regards,<br/>Zoodle E-Commerce</p>
+    </div>`,
     });
 
     return {
@@ -386,11 +400,18 @@ export class AuthService {
   private async sendEmailVerficationLink(email: string, token: string) {
     const verificationUrl = `${FRONTEND_URL}/verify-email?token=${token}&email=${encodeURIComponent(email)}`;
 
-    await this.mailerService.sendMail({
-      from: `Zoodle E-Commerce <${this.config.get<string>('GMAIL_USER')}>`,
-      to: email,
+    return await this.brevo.transactionalEmails.sendTransacEmail({
+      sender: {
+        name: 'Zoodle E-Commerce',
+        email: this.config.get<string>('BREVO_FROM_EMAIL')!,
+      },
+      to: [
+        {
+          email,
+        },
+      ],
       subject: 'Zoodle E-Commerce - Verify Your Email',
-      html: `<div>
+      htmlContent: `<div>
       <h1>Welcome to Zoodle E-Commerce!</h1>
 
       <p>Please verify your email address by clicking the link below:</p>

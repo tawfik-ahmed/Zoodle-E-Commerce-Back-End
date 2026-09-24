@@ -37,7 +37,7 @@ Here are the blueprints showcasing how database entities are structurally relate
 - **Dynamic Cart & Coupon Engine:** Dynamic item subtotal computations on user sessions with dynamic deduction mechanics upon applying live promotional codes.
 - **Comprehensive Review Engine:** Verified customer interaction flow allowing automated rating configurations and structured text feedback per product.
 - **Dual Checkout Channels:** Support for structured automated billing streams processing Cash on Delivery or Card Payments.
-- **Full Supplier Lifecycle & B2B Procurement:** End-to-end supplier management flow. Users can apply for supplier status (`/api/v1/users/me`), which admins review and approve/reject with feedback. Approved suppliers gain access to dedicated vendor operations, company profiles, dynamic stock restocking requests (`Request-Products`), and B2B procurement ledgers.
+- **Full Supplier Lifecycle & B2B Procurement:** End-to-end supplier management flow. Users can apply for supplier status, which admins review and approve/reject with feedback. Approved suppliers gain access to dedicated vendor operations, company profiles, dynamic stock restocking requests (`Request-Products`), and B2B procurement ledgers.
 - **Dynamic Pricing Configuration:** Upsertable administrative control metrics managing uniform tax values and dynamic flat-rate shipping prices at checkout.
 - **Automated Cloud Storage File Uploading:** Multipart data stream parsing for asynchronous profile avatar binding and multi-image product gallery storage.
 
@@ -67,7 +67,7 @@ Here are the blueprints showcasing how database entities are structurally relate
 ### Communications & Billing
 
 - **Stripe (v22.2.0):** Integrated commercial checkout gateway managing secure webhook payment transaction confirmations.
-- **Nodemailer & NestJS Mailer:** Automated SMTP server connection maps processing immediate credential recovery verification tokens.
+- **Brevo:** Transactional email delivery via API for email verification, password reset codes, and order notifications.
 
 ---
 
@@ -110,7 +110,7 @@ Zoodle E-Commerce (Back-End)
 ### 1. Advanced Auth & Token Management
 
 - Uses a **Dual-Token System**: Short-lived Access Tokens for authenticated routes and long-lived Refresh Tokens to dynamically maintain user sessions.
-- Includes a full **Password Reset Cycle** utilizing secure email delivery for time-sensitive, numeric verification codes.
+- Includes a full **Password Reset Cycle** using Brevo transactional emails to deliver time-sensitive numeric verification codes.
 
 ### 2. Multi-Level E-Commerce Hierarchy
 
@@ -125,7 +125,7 @@ Zoodle E-Commerce (Back-End)
 ### 4. Checkout Operations (Stripe Integration)
 
 - **Cash on Delivery:** Direct processing workflow that updates stock inventories and terminates the active cart session safely.
-- **Card Payment:** Communicates with Stripe API to serve secure tokens. The system utilizes structured Webhook endpoints listening for `payment_intent.succeeded` events to switch order states automatically.
+- **Card Payment:** Creates a Stripe Checkout Session and uses webhook events to confirm successful payments and update order states automatically.
 
 ### 5. Standardized DTO Validation & Guards
 
@@ -188,9 +188,9 @@ JWT_REFRESH_TOKEN_EXPIRES_IN=
 # Hash
 SALT=
 
-# Mailer SMTP
-GMAIL_USER=
-GMAIL_APP_PASSWORD=
+# Brevo
+BREVO_API_KEY=
+BREVO_FROM_EMAIL=
 
 # Stripe
 STRIPE_SECRET_KEY=
