@@ -47,7 +47,9 @@ import { OAuthModule } from './oauth/oauth.module';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         transport: {
-          service: 'gmail',
+          host: 'smtp.gmail.com',
+          port: 587,
+          secure: false,
           auth: {
             user: config.get<string>('GMAIL_USER'),
             pass: config.get<string>('GMAIL_APP_PASSWORD'),
