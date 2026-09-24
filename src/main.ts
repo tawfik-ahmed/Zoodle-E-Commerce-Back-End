@@ -13,7 +13,7 @@ async function bootstrap() {
   app.use(helmet());
   app.use(cookieParser());
   app.enableCors({
-    origin: ['http://localhost:5000', 'https://zoodle-frontend.vercel.app'],
+    origin: ['http://localhost:5000', 'https://zoodle-eco.vercel.app'],
     credentials: true,
   });
   app.setGlobalPrefix('/api/v1');

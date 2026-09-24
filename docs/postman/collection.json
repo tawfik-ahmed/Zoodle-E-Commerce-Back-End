@@ -399,7 +399,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email\": \"tawfikahmed1x@gmail.com\",\r\n    \"password\": \"#tawfikahmed01226921531#\"\r\n}",
+              "raw": "{\r\n    \"email\": \"tawfikahmedtawfik48@gmail.com\",\r\n    \"password\": \"#tawfikahmed01226921531#\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -506,7 +506,7 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/auth/verify-email?token=5bdef9664273b3293b79eefcf2be4bceccc1a4cdc0342d522657facea266c3e5&email=tawfikahmed1x@gmail.com",
+              "raw": "{{base_url}}/api/v1/auth/verify-email?token=370213dd80b36a22287a60db7dc618aa1ac7bb4a21602ac7c4b17a71a4d56ac9&email=tawfikahmed1x@gmail.com",
               "host": [
                 "{{base_url}}"
               ],
@@ -519,7 +519,7 @@
               "query": [
                 {
                   "key": "token",
-                  "value": "5bdef9664273b3293b79eefcf2be4bceccc1a4cdc0342d522657facea266c3e5"
+                  "value": "370213dd80b36a22287a60db7dc618aa1ac7bb4a21602ac7c4b17a71a4d56ac9"
                 },
                 {
                   "key": "email",
@@ -1181,6 +1181,48 @@
                 "api",
                 "v1",
                 "coupons"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Available Coupons",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"tawfik@gmail.com\",\r\n    \"password\": \"tawfikahmed01226921531\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/coupons/available",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "coupons",
+                "available"
               ]
             }
           },
@@ -2782,7 +2824,7 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/carts/1",
+              "raw": "{{base_url}}/api/v1/carts/20",
               "host": [
                 "{{base_url}}"
               ],
@@ -2790,7 +2832,7 @@
                 "api",
                 "v1",
                 "carts",
-                "1"
+                "20"
               ]
             }
           },

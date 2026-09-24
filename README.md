@@ -4,6 +4,21 @@ A production-ready RESTful API built with **NestJS**, **TypeORM**, and **MySQL**
 
 ---
 
+## 🌐 Live Frontend
+
+Try Zoodle E-Commerce platform through the live frontend:
+
+**Frontend:** `https://zoodle-eco.vercel.app`
+
+### Supplier Test Account
+
+Use the following account to explore and test the **Supplier functionality**:
+
+- **Email:** `supplier_test@example.com`
+- **Password:** `supplier_supplier`
+
+---
+
 ## Database Diagram
 
 Here are the blueprints showcasing how database entities are structurally related:
