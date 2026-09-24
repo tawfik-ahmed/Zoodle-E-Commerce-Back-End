@@ -1,4 +1,4 @@
-# 🛒 Zoodle E-Commerce (Back-End) Platform
+# 🛒 Zoodle E-Commerce (Back-End)
 
 A production-ready RESTful API built with **NestJS**, **TypeORM**, and **MySQL**. The system is designed using a clean, modular architecture, handling everything from secure authentication and complex catalog relations to a dynamic cart system and Stripe payment integration.
 
@@ -7,8 +7,7 @@ A production-ready RESTful API built with **NestJS**, **TypeORM**, and **MySQL**
 ## 🌐 Live Frontend
 
 Try Zoodle E-Commerce platform through the live frontend:
-
-**Frontend:** `https://zoodle-eco.vercel.app`
+**Frontend:** **https://zoodle-eco.vercel.app**
 
 ### Supplier Test Account
 

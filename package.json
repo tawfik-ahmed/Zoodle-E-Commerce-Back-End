@@ -1,8 +1,8 @@
 {
-  "name": "Zoodle E-Commerce (Back-End)",
+  "name": "Zoodle E-Commerce",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "Full-stack e-commerce platform with product management, cart, orders, payments, reviews, authentication, and supplier functionality.",
+  "author": "Tawfik Ahmed",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
