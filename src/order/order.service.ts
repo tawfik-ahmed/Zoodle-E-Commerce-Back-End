@@ -297,22 +297,22 @@ export class OrderService {
     }
 
     await this.brevo.transactionalEmails.sendTransacEmail({
-  sender: {
-    name: 'Zoodle E-Commerce',
-    email: this.configService.get<string>('BREVO_FROM_EMAIL')!,
-  },
-  to: [
-    {
-      email: order.user.email,
-    },
-  ],
-  subject: 'Zoodle E-Commerce - Order Paid Successfully (Cash)',
-  htmlContent: `<div>
+      sender: {
+        name: 'Zoodle E-Commerce',
+        email: this.configService.get<string>('BREVO_FROM_EMAIL')!,
+      },
+      to: [
+        {
+          email: order.user.email,
+        },
+      ],
+      subject: 'Zoodle E-Commerce - Order Paid Successfully (Cash)',
+      htmlContent: `<div>
     <h1>Order #${order.id} has been paid</h1>
     <p>Thank you for using our service!</p>
     <p>Best regards,<br/>Zoodle E-Commerce</p>
   </div>`,
-});
+    });
 
     return {
       ok: true,
@@ -382,18 +382,18 @@ export class OrderService {
         ]);
 
         await this.brevo.transactionalEmails.sendTransacEmail({
-  sender: {
-    name: 'Zoodle E-Commerce',
-    email: this.configService.get<string>('BREVO_FROM_EMAIL')!,
-  },
-  to: [
-    {
-      email: order.user.email,
-    },
-  ],
-  subject: 'Order Paid Successfully',
-  htmlContent: `<h1>Paid</h1>`,
-});
+          sender: {
+            name: 'Zoodle E-Commerce',
+            email: this.configService.get<string>('BREVO_FROM_EMAIL')!,
+          },
+          to: [
+            {
+              email: order.user.email,
+            },
+          ],
+          subject: 'Order Paid Successfully',
+          htmlContent: `<h1>Paid</h1>`,
+        });
 
         break;
       default:
